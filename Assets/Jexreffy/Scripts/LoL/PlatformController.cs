@@ -6,7 +6,7 @@ using System.IO;
 using LoLSDK;
 using SimpleJSON;
 
-namespace Jexreffy {
+namespace Jexreffy.LoL {
     public class PlatformController : MonoBehaviour {
 
         private static PlatformController _instance;
@@ -47,7 +47,6 @@ namespace Jexreffy {
         public MultipleChoiceQuestionList QuestionData { get; private set; }
 
         void HandleStartGame(string json) {
-            //SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
             StartData = JSON.Parse(json);
         }
         
@@ -62,6 +61,34 @@ namespace Jexreffy {
         
         void HandleLanguageDefs(string json) {
             LanguageData = JSON.Parse(json);
+        }
+
+        public void CompleteGame() {
+            LOLSDK.Instance.CompleteGame();
+        }
+
+        public void SpeakAlternative(int alternativeID) {
+            LOLSDK.Instance.SpeakAlternative(alternativeID);
+        }
+
+        public void SpeakQuestion(int questionID) {
+            LOLSDK.Instance.SpeakQuestion(questionID);
+        }
+
+        public void SpeakQuestionAndAlternatives(int questionID) {
+            LOLSDK.Instance.SpeakQuestionAndAlternatives(questionID);
+        }
+
+        public void SpeakText(string key) {
+            LOLSDK.Instance.SpeakText(key);
+        }
+
+        public void SubmitAnswer(MultipleChoiceAnswer answer) {
+            LOLSDK.Instance.SubmitAnswer(answer);
+        }
+
+        public void SubmitProgress(int score, int current, int maximum = -1) {
+            LOLSDK.Instance.SubmitProgress(score, current, maximum);
         }
 
 #if UNITY_EDITOR
