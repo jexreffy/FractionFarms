@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Jexreffy/Scenes/Initialization.unity
+    guid: 05ebcf7d84bbb450eb69b5c6bc21a066
+  - enabled: 1
     path: Assets/Jexreffy/Scenes/Basics.unity
     guid: 9ce6430581aba434cbe927de5b4d802f
   - enabled: 1
