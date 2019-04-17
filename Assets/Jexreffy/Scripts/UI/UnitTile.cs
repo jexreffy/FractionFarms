@@ -64,6 +64,8 @@ public class UnitTile : MonoBehaviour {
         _currentY = 1;
 
         _selected[0] = 0;
+        _buttonPool[0].image.color = DefaultColors[0];
+        _buttonPool[0].colors = ButtonColors[0];
 
         UpdateTile();
     }

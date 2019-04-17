@@ -6,8 +6,16 @@ using TMPro;
 namespace Jexreffy.FractionFarms {
     public class BasicController : MonoBehaviour {
 
-        public TextMeshProUGUI Instructions;
         public UnitTile Tile;
+
+        public GameObject InstructionContainer;
+        public TextMeshProUGUI Instructions;
+
+        public GameObject ProblemContainer;
+        public TextMeshProUGUI ProblemXNumerator;
+        public TextMeshProUGUI ProblemXDenominator;
+        public TextMeshProUGUI ProblemYNumerator;
+        public TextMeshProUGUI ProblemYDenominator;
 
         public TextMeshProUGUI AnswerNumerator;
         public TextMeshProUGUI AnswerDenominator;
@@ -23,7 +31,7 @@ namespace Jexreffy.FractionFarms {
         private int _currentDenominator;
         
         void Awake() {
-
+            SetInstructionText(true);
         }
         
         void Update() {
@@ -39,8 +47,19 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        private void SetQuestionText() {
+        private void SetInstructionText(bool isProblem) {
+            if (isProblem) {
+                InstructionContainer.SetActive(false);
+                ProblemContainer.SetActive(true);
 
+                ProblemXNumerator.text = ProblemXNumerators[_currentQuestion].ToString();
+                ProblemXDenominator.text = ProblemXDenominators[_currentQuestion].ToString();
+                ProblemYNumerator.text = ProblemYNumerators[_currentQuestion].ToString();
+                ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
+            } else {
+                InstructionContainer.SetActive(true);
+                ProblemContainer.SetActive(false);
+            }
         }
 
         public void OnSubmitAnswer() {
@@ -48,7 +67,7 @@ namespace Jexreffy.FractionFarms {
                 _currentDenominator == ProblemXDenominators[_currentQuestion] * ProblemYDenominators[_currentQuestion]) {
                 _currentQuestion++;
                 Tile.ResetTile();
-                Debug.Log(Time.time + ": Question Correct");
+                SetInstructionText(true);
             }
         }
 
