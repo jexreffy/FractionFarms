@@ -5,144 +5,146 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
-public class UnitTile : MonoBehaviour {
+namespace Jexreffy.FractionFarms {
+    public class UnitTile : MonoBehaviour {
 
-    public TextMeshProUGUI XDenominator;
-    public Button XBackButton;
-    public Button XForwardButton;
+        public int MaxDenominator = 5;
 
-    public TextMeshProUGUI YDenominator;
-    public Button YBackButton;
-    public Button YForwardButton;
-    
-    public GameObject TemplateTile;
+        public TextMeshProUGUI XDenominator;
+        public Button XBackButton;
+        public Button XForwardButton;
 
-    public List<Color> DefaultColors = new List<Color>();
-    public List<ColorBlock> ButtonColors = new List<ColorBlock>();
+        public TextMeshProUGUI YDenominator;
+        public Button YBackButton;
+        public Button YForwardButton;
 
-    private int _currentX = 1;
-    private int _currentY = 1;
+        public GameObject TemplateTile;
 
-    private List<Button> _buttonPool;
-    private List<GameObject> _objectPool;
-    private List<RectTransform> _transformPool;
-    private List<int> _selected;
+        public List<Color> DefaultColors = new List<Color>();
+        public List<ColorBlock> ButtonColors = new List<ColorBlock>();
 
-    private Vector2 SPACER = new Vector2(3, 3);
+        private int _currentX = 1;
+        private int _currentY = 1;
 
-    private const int MAX_DENOMINATOR = 5;
+        private List<Button> _buttonPool;
+        private List<GameObject> _objectPool;
+        private List<RectTransform> _transformPool;
+        private List<int> _selected;
 
-    void Awake() {
-        int numTiles = MAX_DENOMINATOR * MAX_DENOMINATOR;
+        private Vector2 SPACER = new Vector2(3, 3);
 
-        _buttonPool = new List<Button>(numTiles);
-        _objectPool = new List<GameObject>(numTiles);
-        _transformPool = new List<RectTransform>(numTiles);
-        _selected = new List<int>(numTiles);
+        void Awake() {
+            int numTiles = MaxDenominator * MaxDenominator;
 
-        for (int i = 0; i < numTiles; i++) {
-            _objectPool.Add(Instantiate(TemplateTile));
-            _buttonPool.Add(_objectPool[i].GetComponent<Button>());
-            RectTransform rect = _objectPool[i].GetComponent<RectTransform>();
-            _transformPool.Add(rect);
-            rect.SetParent(TemplateTile.transform.parent, false);
-            _objectPool[i].name = i.ToString();
-            _objectPool[i].SetActive(false);
-            _buttonPool[i].onClick.AddListener(OnTileClick);
-            _selected.Add(0);
+            _buttonPool = new List<Button>(numTiles);
+            _objectPool = new List<GameObject>(numTiles);
+            _transformPool = new List<RectTransform>(numTiles);
+            _selected = new List<int>(numTiles);
+
+            for (int i = 0; i < numTiles; i++) {
+                _objectPool.Add(Instantiate(TemplateTile));
+                _buttonPool.Add(_objectPool[i].GetComponent<Button>());
+                RectTransform rect = _objectPool[i].GetComponent<RectTransform>();
+                _transformPool.Add(rect);
+                rect.SetParent(TemplateTile.transform.parent, false);
+                _objectPool[i].name = i.ToString();
+                _objectPool[i].SetActive(false);
+                _buttonPool[i].onClick.AddListener(OnTileClick);
+                _selected.Add(0);
+            }
+
+            InitializeTile();
         }
 
-        InitializeTile();
-    }
+        private void InitializeTile() {
+            UpdateTile();
+        }
 
-    private void InitializeTile() {
-        UpdateTile();
-    }
+        public void ResetTile() {
+            _currentX = 1;
+            _currentY = 1;
 
-    public void ResetTile() {
-        _currentX = 1;
-        _currentY = 1;
+            _selected[0] = 0;
+            _buttonPool[0].image.color = DefaultColors[0];
+            _buttonPool[0].colors = ButtonColors[0];
 
-        _selected[0] = 0;
-        _buttonPool[0].image.color = DefaultColors[0];
-        _buttonPool[0].colors = ButtonColors[0];
+            UpdateTile();
+        }
 
-        UpdateTile();
-    }
+        private void UpdateTile() {
+            XDenominator.text = _currentX + "";
+            XBackButton.interactable = _currentX > 1;
+            XForwardButton.interactable = _currentX < MaxDenominator;
+            YDenominator.text = _currentY + "";
+            YBackButton.interactable = _currentY > 1;
+            YForwardButton.interactable = _currentY < MaxDenominator;
 
-    private void UpdateTile() {
-        XDenominator.text = _currentX + "";
-        XBackButton.interactable = _currentX > 1;
-        XForwardButton.interactable = _currentX < MAX_DENOMINATOR;
-        YDenominator.text = _currentY + "";
-        YBackButton.interactable = _currentY > 1;
-        YForwardButton.interactable = _currentY < MAX_DENOMINATOR;
+            int numTiles = _currentX * _currentY;
 
-        int numTiles = _currentX * _currentY;
-
-        for (int i = 0; i < _objectPool.Count; i++) {
-            _objectPool[i].SetActive(i % MAX_DENOMINATOR < _currentX && i / MAX_DENOMINATOR < _currentY);
-            if (_objectPool[i].activeSelf) {
-                _transformPool[i].anchorMin = new Vector2(i % MAX_DENOMINATOR / (float)_currentX, i / MAX_DENOMINATOR / (float)_currentY);
-                _transformPool[i].anchorMax = new Vector2(_transformPool[i].anchorMin.x + (1 % MAX_DENOMINATOR / (float)_currentX), (i + MAX_DENOMINATOR) / MAX_DENOMINATOR / (float)_currentY);
-                _transformPool[i].offsetMin = SPACER;
-                _transformPool[i].offsetMax = -SPACER;
-            } else {
-                _selected[i] = 0;
-                _buttonPool[i].image.color = DefaultColors[0];
-                _buttonPool[i].colors = ButtonColors[0];
+            for (int i = 0; i < _objectPool.Count; i++) {
+                _objectPool[i].SetActive(i % MaxDenominator < _currentX && i / MaxDenominator < _currentY);
+                if (_objectPool[i].activeSelf) {
+                    _transformPool[i].anchorMin = new Vector2(i % MaxDenominator / (float)_currentX, i / MaxDenominator / (float)_currentY);
+                    _transformPool[i].anchorMax = new Vector2(_transformPool[i].anchorMin.x + (1 % MaxDenominator / (float)_currentX), (i + MaxDenominator) / MaxDenominator / (float)_currentY);
+                    _transformPool[i].offsetMin = SPACER;
+                    _transformPool[i].offsetMax = -SPACER;
+                } else {
+                    _selected[i] = 0;
+                    _buttonPool[i].image.color = DefaultColors[0];
+                    _buttonPool[i].colors = ButtonColors[0];
+                }
             }
         }
-    }
 
-    public int Denominator { get { return _currentX * _currentY; } }
+        public int Denominator { get { return _currentX * _currentY; } }
 
-    public int GetSelected(int index) {
-        if (index > 0 && index < DefaultColors.Count) {
-            int retVal = 0;
-            for (int i = 0; i < _selected.Count; i++) {
-                if (_selected[i] == index) retVal++;
+        public int GetSelected(int index) {
+            if (index > 0 && index < DefaultColors.Count) {
+                int retVal = 0;
+                for (int i = 0; i < _selected.Count; i++) {
+                    if (_selected[i] == index) retVal++;
+                }
+                return retVal;
             }
-            return retVal;
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    public void OnBackX() {
-        if (_currentX > 1) {
-            _currentX--;
-            UpdateTile();
+        public void OnBackX() {
+            if (_currentX > 1) {
+                _currentX--;
+                UpdateTile();
+            }
         }
-    }
 
-    public void OnForwardX() {
-        if (_currentX < MAX_DENOMINATOR) {
-            _currentX++;
-            UpdateTile();
+        public void OnForwardX() {
+            if (_currentX < MaxDenominator) {
+                _currentX++;
+                UpdateTile();
+            }
         }
-    }
 
-    public void OnBackY() {
-        if (_currentY > 1) {
-            _currentY--;
-            UpdateTile();
+        public void OnBackY() {
+            if (_currentY > 1) {
+                _currentY--;
+                UpdateTile();
+            }
         }
-    }
 
-    public void OnForwardY() {
-        if (_currentY < MAX_DENOMINATOR) {
-            _currentY++;
-            UpdateTile();
+        public void OnForwardY() {
+            if (_currentY < MaxDenominator) {
+                _currentY++;
+                UpdateTile();
+            }
         }
-    }
 
-    public void OnTileClick() {
-        int index = int.Parse(EventSystem.current.currentSelectedGameObject.name);
+        public void OnTileClick() {
+            int index = int.Parse(EventSystem.current.currentSelectedGameObject.name);
 
-        if (++_selected[index] >= DefaultColors.Count) _selected[index] = 0;
+            if (++_selected[index] >= DefaultColors.Count) _selected[index] = 0;
 
-        _buttonPool[index].image.color = DefaultColors[_selected[index]];
-        _buttonPool[index].colors = ButtonColors[_selected[index]];
+            _buttonPool[index].image.color = DefaultColors[_selected[index]];
+            _buttonPool[index].colors = ButtonColors[_selected[index]];
+        }
     }
 }

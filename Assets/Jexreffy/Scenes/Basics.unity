@@ -857,9 +857,9 @@ MonoBehaviour:
   AnswerNumerator: {fileID: 1338325655}
   AnswerDenominator: {fileID: 1988741102}
   ProblemXNumerators: 010000000200000002000000
-  ProblemXDenominators: 030000000500000003000000
-  ProblemYNumerators: 020000000300000004000000
-  ProblemYDenominators: 030000000400000005000000
+  ProblemXDenominators: 030000000700000003000000
+  ProblemYNumerators: 020000000300000005000000
+  ProblemYDenominators: 030000000400000006000000
 --- !u!1 &681826268
 GameObject:
   m_ObjectHideFlags: 0
@@ -3273,6 +3273,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5767459414012786747, guid: 96408434ace124d7c9062ccc92685d17,
+        type: 3}
+      propertyPath: MaxDenominator
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5767459415461920621, guid: 96408434ace124d7c9062ccc92685d17,
         type: 3}
