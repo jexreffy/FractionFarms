@@ -10,10 +10,13 @@ namespace Jexreffy.FractionFarms {
 
         public int MaxDenominator = 5;
 
+        public TextMeshProUGUI XNumerator;
         public TextMeshProUGUI XDenominator;
         public Button XBackButton;
         public Button XForwardButton;
 
+        public TextMeshProUGUI YNumerator;
+        public TextMeshProUGUI YDivider;
         public TextMeshProUGUI YDenominator;
         public Button YBackButton;
         public Button YForwardButton;
@@ -22,6 +25,8 @@ namespace Jexreffy.FractionFarms {
 
         public List<Color> DefaultColors = new List<Color>();
         public List<ColorBlock> ButtonColors = new List<ColorBlock>();
+
+        private bool _enabled;
 
         private int _currentX = 1;
         private int _currentY = 1;
@@ -58,6 +63,29 @@ namespace Jexreffy.FractionFarms {
 
         private void InitializeTile() {
             UpdateTile();
+        }
+
+        public void EnableTile() {
+            _enabled = true;
+            OnTileEnabled();
+        }
+
+        public void DisableTile() {
+            _enabled = false;
+            OnTileEnabled();
+        }
+
+        private void OnTileEnabled() {
+            XNumerator.gameObject.SetActive(_enabled);
+            XDenominator.gameObject.SetActive(_enabled);
+            XBackButton.gameObject.SetActive(_enabled);
+            XForwardButton.gameObject.SetActive(_enabled);
+
+            YNumerator.gameObject.SetActive(_enabled);
+            YDivider.gameObject.SetActive(_enabled);
+            YDenominator.gameObject.SetActive(_enabled);
+            YBackButton.gameObject.SetActive(_enabled);
+            YForwardButton.gameObject.SetActive(_enabled);
         }
 
         public void ResetTile() {

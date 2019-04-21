@@ -63,6 +63,11 @@ namespace Jexreffy.LoL {
             LanguageData = JSON.Parse(json);
         }
 
+        public string GetTextAndSpeak(string key) {
+            SpeakText(key);
+            return LanguageData[key].Value;
+        }
+
         public void CompleteGame() {
             LOLSDK.Instance.CompleteGame();
         }

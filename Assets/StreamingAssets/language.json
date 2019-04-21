@@ -1,18 +1,34 @@
 {
   "_meta": {
     "maxChars": {
-      "welcome": 20,
-      "readyToPlay": 20,
-      "pressContinue": 50,
-      "greatJob": 20,
-      "onePlusOne": 30
+      "welcome": 162,
+      "basics_01": 162,
+      "basics_02": 162,
+      "basics_03": 162,
+      "basics_04": 162,
+      "basics_05": 162,
+      "basics_06": 162,
+      "basics_07": 162,
+      "basics_08": 162,
+      "basics_09": 162,
+      "basics_10": 162,
+      "basics_11": 162,
+      "basics_12": 162
     }
   },
   "en": {
-    "welcome": "Welcome!",
-    "readyToPlay": "Are you ready to play?",
-    "greatJob": "Great job!",
-    "pressContinue": "Press the next button to continue.",
-    "onePlusOne": "One + One = Two"
+    "welcome": "Welcome to Fraction Farms!",
+    "basics_01": "Here at Fraction Farms, we showcase how to divide up land in order to produce crops more efficiently.",
+    "basics_02": "We do this by taking Unit Tiles and breaking their sides into fractional lengths.",
+    "basics_03": "For each side, there is a back and forward button to increase and decrease the number of parts each side is divided up into.",
+    "basics_04": "We can select each individual piece to count up the number of fractional tiles that intersect with the portion of the area we are looking to use.",
+    "basics_05": "Once you have selected the right number of tiles, you can click the submit button to check your results.",
+    "basics_06": "Let's give it a try!",
+    "basics_07": "Excellent! Let's try another one!",
+    "basics_08": "You're a fast learner! Great job!",
+    "basics_09": "Notice how the solution we are getting is the same as if we multiplied the fractions together, multiplying the numerators togehter and the denominators together.",
+    "basics_10": "Let's try one more!",
+    "basics_11": "Wonderful! You've mastered working with one tile, but dividing up land sometimes takes multiple tiles.",
+    "basics_12": "Let's move one another part of the farm!"
   }
 }
