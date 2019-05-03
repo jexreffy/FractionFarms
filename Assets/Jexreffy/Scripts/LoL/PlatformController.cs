@@ -133,7 +133,7 @@ namespace Jexreffy.LoL {
                 MultipleChoiceQuestionList questionPayload = MultipleChoiceQuestionList.CreateFromJSON(questionsData);
                 HandleQuestions(questionPayload);
             }
-#endif
         }
+#endif
     }
 }
