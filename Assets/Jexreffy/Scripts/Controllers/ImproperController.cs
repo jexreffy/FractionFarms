@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using TMPro;
 
 namespace Jexreffy.FractionFarms {
-    public sealed class MixedController : SectionController {
+    public sealed class ImproperController : SectionController {
 
         public List<UnitTile> Tiles = new List<UnitTile>();
-        
+
+        private bool _isEnabling;
+
         void Awake() {
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].Parent = this;
@@ -21,23 +23,34 @@ namespace Jexreffy.FractionFarms {
         }
 
         public override void OnQuestionStep() {
-            //Tile.EnableTile();
+            _isEnabling = true;
+            for (int i = 0; i < Tiles.Count; i++) {
+                Tiles[i].EnableTile();
+            }
+            _isEnabling = false;
         }
 
         public override void DisableTiles() {
+            if (_isEnabling) return;
+
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].DisableTile();
             }
         }
 
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
-            if (Tiles[tileIndex].IsTileEnabled) {
-
+            if (_currentDenominator != Tiles[tileIndex].Denominator) {
+                _currentDenominator = Tiles[tileIndex].Denominator;
+                AnswerDenominator.text = _currentDenominator.ToString();
             }
         }
 
         public override void UpdateNumerator(int tileIndex) {
-            
+            _currentNumerator = 0;
+            for (int i = 0; i < Tiles.Count; i++) {
+                _currentNumerator += Tiles[i].GetSelected(1);
+            }
+            AnswerNumerator.text = _currentNumerator.ToString();
         }
 
         public override void OnCorrectAnswer() {

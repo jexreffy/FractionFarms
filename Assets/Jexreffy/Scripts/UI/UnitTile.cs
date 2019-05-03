@@ -10,6 +10,8 @@ namespace Jexreffy.FractionFarms {
 
         public int MaxDenominator = 5;
 
+        public Button Enabler;
+
         public TextMeshProUGUI XNumerator;
         public TextMeshProUGUI XDenominator;
         public Button XBackButton;
@@ -25,6 +27,11 @@ namespace Jexreffy.FractionFarms {
 
         public List<Color> DefaultColors = new List<Color>();
         public List<ColorBlock> ButtonColors = new List<ColorBlock>();
+
+        [HideInInspector]
+        public SectionController Parent;
+        [HideInInspector]
+        public int Index;
 
         private bool _enabled;
 
@@ -62,20 +69,30 @@ namespace Jexreffy.FractionFarms {
         }
 
         private void InitializeTile() {
+            OnTileEnabled();
             UpdateTile();
         }
 
+        public bool IsTileEnabled { get { return _enabled; } }
+
         public void EnableTile() {
-            _enabled = true;
-            OnTileEnabled();
+            Parent.DisableTiles();
+            if (!_enabled) {
+                _enabled = true;
+                OnTileEnabled();
+            }
         }
 
         public void DisableTile() {
-            _enabled = false;
-            OnTileEnabled();
+            if (_enabled) {
+                _enabled = false;
+                OnTileEnabled();
+            }
         }
 
         private void OnTileEnabled() {
+            Enabler.enabled = !_enabled;
+
             XNumerator.gameObject.SetActive(_enabled);
             XDenominator.gameObject.SetActive(_enabled);
             XBackButton.gameObject.SetActive(_enabled);
@@ -86,6 +103,11 @@ namespace Jexreffy.FractionFarms {
             YDenominator.gameObject.SetActive(_enabled);
             YBackButton.gameObject.SetActive(_enabled);
             YForwardButton.gameObject.SetActive(_enabled);
+
+            for (int i = 0; i < _buttonPool.Count; i++) {
+                _buttonPool[i].image.raycastTarget = _enabled;
+                _buttonPool[i].interactable = _enabled;
+            }
         }
 
         public void ResetTile() {
@@ -95,6 +117,9 @@ namespace Jexreffy.FractionFarms {
             _selected[0] = 0;
             _buttonPool[0].image.color = DefaultColors[0];
             _buttonPool[0].colors = ButtonColors[0];
+
+            _enabled = false;
+            OnTileEnabled();
 
             UpdateTile();
         }
@@ -142,6 +167,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentX > 1) {
                 _currentX--;
                 UpdateTile();
+                Parent.UpdateDenominator(Index, false);
             }
         }
 
@@ -149,6 +175,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentX < MaxDenominator) {
                 _currentX++;
                 UpdateTile();
+                Parent.UpdateDenominator(Index, false);
             }
         }
 
@@ -156,6 +183,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentY > 1) {
                 _currentY--;
                 UpdateTile();
+                Parent.UpdateDenominator(Index, false);
             }
         }
 
@@ -163,6 +191,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentY < MaxDenominator) {
                 _currentY++;
                 UpdateTile();
+                Parent.UpdateDenominator(Index, false);
             }
         }
 
@@ -173,6 +202,8 @@ namespace Jexreffy.FractionFarms {
 
             _buttonPool[index].image.color = DefaultColors[_selected[index]];
             _buttonPool[index].colors = ButtonColors[_selected[index]];
+
+            Parent.UpdateNumerator(Index);
         }
     }
 }

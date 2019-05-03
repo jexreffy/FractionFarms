@@ -10,17 +10,8 @@ namespace Jexreffy.FractionFarms {
 
         public UnitTile Tile;
 
-        void Update() {
-            if (_currentDenominator != Tile.Denominator) {
-                _currentDenominator = Tile.Denominator;
-                AnswerDenominator.text = _currentDenominator.ToString();
-            }
-
-            int selectedCount = Tile.GetSelected(1);
-            if (_currentNumerator != selectedCount) {
-                _currentNumerator = selectedCount;
-                AnswerNumerator.text = _currentNumerator.ToString();
-            }
+        void Awake() {
+            Tile.Parent = this;
         }
 
         public override void OnInstructionStep() {
@@ -29,6 +20,25 @@ namespace Jexreffy.FractionFarms {
 
         public override void OnQuestionStep() {
             Tile.EnableTile();
+        }
+
+        public override void DisableTiles() {
+            Tile.DisableTile();
+        }
+
+        public override void UpdateDenominator(int tileIndex, bool yAxis) {
+            if (_currentDenominator != Tile.Denominator) {
+                _currentDenominator = Tile.Denominator;
+                AnswerDenominator.text = _currentDenominator.ToString();
+            }
+        }
+
+        public override void UpdateNumerator(int tileIndex) {
+            int selectedCount = Tile.GetSelected(1);
+            if (_currentNumerator != selectedCount) {
+                _currentNumerator = selectedCount;
+                AnswerNumerator.text = _currentNumerator.ToString();
+            }
         }
 
         public override void OnCorrectAnswer() {

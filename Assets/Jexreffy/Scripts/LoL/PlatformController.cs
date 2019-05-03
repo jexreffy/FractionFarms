@@ -42,6 +42,10 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.GameIsReady();
         }
 
+        public void AdvanceScene() {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+        }
+
         public JSONNode StartData { get; private set; }
         public JSONNode LanguageData { get; private set; }
         public MultipleChoiceQuestionList QuestionData { get; private set; }

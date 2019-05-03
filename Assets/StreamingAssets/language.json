@@ -13,7 +13,24 @@
       "basics_09": 162,
       "basics_10": 162,
       "basics_11": 162,
-      "basics_12": 162
+      "basics_12": 162,
+      "mixed_01": 162,
+      "mixed_02": 162,
+      "mixed_03": 162,
+      "mixed_04": 162,
+      "mixed_05": 162,
+      "mixed_06": 162,
+      "mixed_07": 162,
+      "mixed_08": 162,
+      "mixed_09": 162,
+      "mixed_10": 162,
+      "improper_01": 162,
+      "improper_02": 162,
+      "improper_03": 162,
+      "improper_04": 162,
+      "improper_05": 162,
+      "improper_06": 162,
+      "improper_07": 162
     }
   },
   "en": {
@@ -29,6 +46,23 @@
     "basics_09": "Notice how the solution we are getting is the same as if we multiplied the fractions together, multiplying the numerators togehter and the denominators together.",
     "basics_10": "Let's try one more!",
     "basics_11": "Wonderful! You've mastered working with one tile, but dividing up land sometimes takes multiple tiles.",
-    "basics_12": "Let's move one another part of the farm!"
+    "basics_12": "Let's move onto another part of the farm!",
+    "mixed_01": "We need more than one tile when were dealing with numbers greater than one.",
+    "mixed_02": "Working with multiple tiles is easy, though. You just need to click on the tile you want to interact with to enable it.",
+    "mixed_03": "We can still count up the tiles, but because we are dealing with mixed tiles of fractional size, we show the answer with the common denominator.",
+    "mixed_04": "Let's give this a try!",
+    "mixed_05": "Great job! Notice how the same rule applies, that we get the same solution had we multiplied the two numbers together.",
+    "mixed_06": "Let's try another one!",
+    "mixed_07": "Good job! Keep it up! You're doing great!",
+    "mixed_08": "Excellent! Let's do one more!",
+    "mixed_09": "I'm impressed! You've done really well to come this far.",
+    "mixed_10": "You know, there is another way we can look at these problems that reference back to when we used one tile. Come on, I'll show you!",
+    "improper_01": "Another way we can visualize using multiple tiles is by slicing up all the tiles by the same denominators, and counting the individual tiles up together.",
+    "improper_02": "This will require us to look at our fractions as improper fractions. Let's take the problem we just completed and do it again, but looking at it as improper fractions.",
+    "improper_03": "Well done! Now, on your own, convert the problem to improper fractions and solve the next problems using this method.",
+    "improper_04": "Nicely done! Let's try the next one!",
+    "improper_05": "Excellent! Just one more to go.",
+    "improper_06": "Bravo! You've become quite the expert at being able to divide up land.",
+    "improper_07": "I think you're ready to try dividing up not just the land, but manage multiple crops that we need to produce. Let's go to the last land plot!"
   }
 }
