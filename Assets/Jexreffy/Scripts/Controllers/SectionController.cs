@@ -44,7 +44,7 @@ namespace Jexreffy.FractionFarms {
         
         protected int _currentWhole;
         protected int _currentNumerator;
-        protected int _currentDenominator;
+        protected int _currentDenominator = 1;
 
         private static readonly WaitForSeconds SCENE_DELAY = new WaitForSeconds(0.6f);
 
@@ -142,7 +142,7 @@ namespace Jexreffy.FractionFarms {
         public virtual void OnQuestionStep() { }
         public virtual void DisableTiles() { }
         public virtual void UpdateDenominator(int tileIndex, bool yAxis) { }
-        public virtual void UpdateNumerator(int tileIndex) { }
+        public virtual void UpdateNumerator() { }
         public virtual void OnCorrectAnswer() { }
     }
 }

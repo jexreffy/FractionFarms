@@ -15,6 +15,7 @@ namespace Jexreffy.FractionFarms {
         void Awake() {
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].Parent = this;
+                Tiles[i].Index = i;
             }
         }
 
@@ -39,13 +40,13 @@ namespace Jexreffy.FractionFarms {
         }
 
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
-            if (_currentDenominator != Tiles[tileIndex].Denominator) {
-                _currentDenominator = Tiles[tileIndex].Denominator;
+            if (_currentDenominator != Tiles[tileIndex].CurrentDenominator) {
+                _currentDenominator = Tiles[tileIndex].CurrentDenominator;
                 AnswerDenominator.text = _currentDenominator.ToString();
             }
         }
 
-        public override void UpdateNumerator(int tileIndex) {
+        public override void UpdateNumerator() {
             _currentNumerator = 0;
             for (int i = 0; i < Tiles.Count; i++) {
                 _currentNumerator += Tiles[i].GetSelected(1);

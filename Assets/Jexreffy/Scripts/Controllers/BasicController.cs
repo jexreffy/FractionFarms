@@ -27,13 +27,13 @@ namespace Jexreffy.FractionFarms {
         }
 
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
-            if (_currentDenominator != Tile.Denominator) {
-                _currentDenominator = Tile.Denominator;
+            if (_currentDenominator != Tile.CurrentDenominator) {
+                _currentDenominator = Tile.CurrentDenominator;
                 AnswerDenominator.text = _currentDenominator.ToString();
             }
         }
 
-        public override void UpdateNumerator(int tileIndex) {
+        public override void UpdateNumerator() {
             int selectedCount = Tile.GetSelected(1);
             if (_currentNumerator != selectedCount) {
                 _currentNumerator = selectedCount;

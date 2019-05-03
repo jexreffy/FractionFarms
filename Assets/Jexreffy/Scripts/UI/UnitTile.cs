@@ -90,19 +90,21 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        private void OnTileEnabled() {
+        private void OnTileEnabled(bool overrideControls = false) {
             Enabler.enabled = !_enabled;
 
-            XNumerator.gameObject.SetActive(_enabled);
-            XDenominator.gameObject.SetActive(_enabled);
-            XBackButton.gameObject.SetActive(_enabled);
-            XForwardButton.gameObject.SetActive(_enabled);
+            if (!overrideControls) {
+                XNumerator.gameObject.SetActive(_enabled);
+                XDenominator.gameObject.SetActive(_enabled);
+                XBackButton.gameObject.SetActive(_enabled);
+                XForwardButton.gameObject.SetActive(_enabled);
 
-            YNumerator.gameObject.SetActive(_enabled);
-            YDivider.gameObject.SetActive(_enabled);
-            YDenominator.gameObject.SetActive(_enabled);
-            YBackButton.gameObject.SetActive(_enabled);
-            YForwardButton.gameObject.SetActive(_enabled);
+                YNumerator.gameObject.SetActive(_enabled);
+                YDivider.gameObject.SetActive(_enabled);
+                YDenominator.gameObject.SetActive(_enabled);
+                YBackButton.gameObject.SetActive(_enabled);
+                YForwardButton.gameObject.SetActive(_enabled);
+            }
 
             for (int i = 0; i < _buttonPool.Count; i++) {
                 _buttonPool[i].image.raycastTarget = _enabled;
@@ -110,16 +112,16 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        public void ResetTile() {
-            _currentX = 1;
-            _currentY = 1;
+        public void ResetTile(bool overrideControls = false, bool resetX = true, bool resetY = true) {
+            if (resetX) _currentX = 1;
+            if (resetY) _currentY = 1;
 
             _selected[0] = 0;
             _buttonPool[0].image.color = DefaultColors[0];
             _buttonPool[0].colors = ButtonColors[0];
 
             _enabled = false;
-            OnTileEnabled();
+            OnTileEnabled(overrideControls);
 
             UpdateTile();
         }
@@ -149,7 +151,9 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        public int Denominator { get { return _currentX * _currentY; } }
+        public int CurrentXDenominator { get { return _currentX; } }
+        public int CurrentYDenominator { get { return _currentY; } }
+        public int CurrentDenominator { get { return _currentX * _currentY; } }
 
         public int GetSelected(int index) {
             if (index > 0 && index < DefaultColors.Count) {
@@ -183,7 +187,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentY > 1) {
                 _currentY--;
                 UpdateTile();
-                Parent.UpdateDenominator(Index, false);
+                Parent.UpdateDenominator(Index, true);
             }
         }
 
@@ -191,7 +195,7 @@ namespace Jexreffy.FractionFarms {
             if (_currentY < MaxDenominator) {
                 _currentY++;
                 UpdateTile();
-                Parent.UpdateDenominator(Index, false);
+                Parent.UpdateDenominator(Index, true);
             }
         }
 
@@ -203,7 +207,7 @@ namespace Jexreffy.FractionFarms {
             _buttonPool[index].image.color = DefaultColors[_selected[index]];
             _buttonPool[index].colors = ButtonColors[_selected[index]];
 
-            Parent.UpdateNumerator(Index);
+            Parent.UpdateNumerator();
         }
     }
 }
