@@ -41,7 +41,7 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        public override void OnCorrectAnswer() {
+        public override void OnAnswerSubmitted() {
             Tile.ResetTile();
         }
     }

@@ -867,77 +867,77 @@ MonoBehaviour:
   SequenceSteps:
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_01
+    LanguageKey: basics_line_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_02
+    LanguageKey: basics_line_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_03
+    LanguageKey: basics_line_03
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_04
+    LanguageKey: basics_line_04
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_05
+    LanguageKey: basics_line_05
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_06
+    LanguageKey: basics_line_06
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: basics_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_07
+    LanguageKey: basics_line_07
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: basics_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_08
+    LanguageKey: basics_line_08
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_09
+    LanguageKey: basics_line_09
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_10
+    LanguageKey: basics_line_10
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: basics_error_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_11
+    LanguageKey: basics_line_11
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: basics_12
+    LanguageKey: basics_line_12
     HasAnimation: 0
     AnimationKey: 
   ProblemXWholes: 000000000000000000000000

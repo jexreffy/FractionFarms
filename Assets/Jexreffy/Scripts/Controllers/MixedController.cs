@@ -80,7 +80,7 @@ namespace Jexreffy.FractionFarms {
             AnswerNumerator.text = _currentNumerator.ToString();
         }
 
-        public override void OnCorrectAnswer() {
+        public override void OnAnswerSubmitted() {
             _xDenominator = 1;
             _yDenominator = 1;
             for (int i = 0; i < Tiles.Count; i++) {

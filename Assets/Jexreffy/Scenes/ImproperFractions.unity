@@ -163,57 +163,57 @@ MonoBehaviour:
   SequenceSteps:
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_01
+    LanguageKey: improper_line_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_02
+    LanguageKey: improper_line_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: improper_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_03
+    LanguageKey: improper_line_03
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: improper_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_04
+    LanguageKey: improper_line_04
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: improper_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_05
+    LanguageKey: improper_line_05
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: improper_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_06
+    LanguageKey: improper_line_06
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: improper_07
+    LanguageKey: improper_line_07
     HasAnimation: 0
     AnimationKey: 
   ProblemXWholes: 00000000020000000300000002000000

@@ -163,72 +163,72 @@ MonoBehaviour:
   SequenceSteps:
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_01
+    LanguageKey: mixed_line_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_02
+    LanguageKey: mixed_line_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_03
+    LanguageKey: mixed_line_03
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_04
+    LanguageKey: mixed_line_04
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: mixed_error_01
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_05
+    LanguageKey: mixed_line_05
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_06
+    LanguageKey: mixed_line_06
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: mixed_error_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_07
+    LanguageKey: mixed_line_07
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: mixed_error_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_08
+    LanguageKey: mixed_line_08
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 1
     HasText: 0
-    LanguageKey: 
+    LanguageKey: mixed_error_02
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_09
+    LanguageKey: mixed_line_09
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
     HasText: 1
-    LanguageKey: mixed_10
+    LanguageKey: mixed_line_10
     HasAnimation: 0
     AnimationKey: 
   ProblemXWholes: 01000000020000000200000003000000

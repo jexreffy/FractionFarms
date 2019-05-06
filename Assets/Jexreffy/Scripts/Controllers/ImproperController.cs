@@ -54,7 +54,7 @@ namespace Jexreffy.FractionFarms {
             AnswerNumerator.text = _currentNumerator.ToString();
         }
 
-        public override void OnCorrectAnswer() {
+        public override void OnAnswerSubmitted() {
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].ResetTile();
             }
