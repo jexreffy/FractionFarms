@@ -14,6 +14,10 @@ namespace Jexreffy.FractionFarms {
         public Button SkipButton;
         public Button SubmitButton;
 
+        public RectTransform ScoreTransform;
+        public TextMeshProUGUI ScoreLabel;
+        public TextMeshProUGUI ScoreValue;
+
         public GameObject ProblemContainer;
         public TextMeshProUGUI ProblemXWhole;
         public TextMeshProUGUI ProblemXNumerator;
@@ -41,6 +45,7 @@ namespace Jexreffy.FractionFarms {
 
         protected int _currentStep = -1;
         protected int _currentQuestion;
+        protected int _currentScore;
         
         protected int _currentWhole;
         protected int _currentNumerator;
@@ -50,10 +55,14 @@ namespace Jexreffy.FractionFarms {
 
         private static readonly WaitForSeconds SCENE_DELAY = new WaitForSeconds(0.6f);
 
+        private const string SCORE = "score";
         private const string FADE_IN_TRIGGER = "FadeIn";
         private const string FADE_OUT_TRIGGER = "FadeOut";
 
         void Start() {
+            ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
+            ScoreValue.text = PlatformController.Instance.Score.ToString();
+
             AdvanceStep();
             FaderAnimator.SetTrigger(FADE_IN_TRIGGER);
         }
@@ -88,6 +97,8 @@ namespace Jexreffy.FractionFarms {
             AnswerDivider.gameObject.SetActive(true);
             AnswerDenominator.gameObject.SetActive(true);
             AnswerDenominator.text = "1";
+
+            _currentScore = CurrentStep.PointsAvailable;
 
             OnQuestionStep();
 
@@ -133,10 +144,13 @@ namespace Jexreffy.FractionFarms {
                 _currentWhole = 0;
                 _currentNumerator = 0;
                 _currentDenominator = 0;
+                PlatformController.Instance.UpdateProgress(_currentScore);
+                ScoreValue.text = PlatformController.Instance.Score.ToString();
                 _currentQuestion++;
                 AdvanceStep();
             } else {
                 _isError = true;
+                _currentScore = Mathf.Max(_currentScore - CurrentStep.IncorrectPenalty, 0);
                 ShowInstruction();
             }
 

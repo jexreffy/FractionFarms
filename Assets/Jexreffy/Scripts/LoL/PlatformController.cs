@@ -9,10 +9,13 @@ using SimpleJSON;
 namespace Jexreffy.LoL {
     public class PlatformController : MonoBehaviour {
 
+        private int _currentProgress;
+
         private static PlatformController _instance;
         public static PlatformController Instance { get { return _instance ?? new GameObject("PlatformController").AddComponent<PlatformController>(); } }
 
         private const string PROJECT_ID = "com.jexreffy.fractionfarms";
+        private const int MAXIMUM_PROGRESS = 11;
 
 #if UNITY_EDITOR
         private const string LANG_FILE = "language.json";
@@ -42,6 +45,8 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.GameIsReady();
         }
 
+        public int Score { get; private set; }
+
         public void AdvanceScene() {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
         }
@@ -65,6 +70,10 @@ namespace Jexreffy.LoL {
         
         void HandleLanguageDefs(string json) {
             LanguageData = JSON.Parse(json);
+        }
+
+        public string GetText(string key) {
+            return LanguageData[key].Value;
         }
 
         public string GetTextAndSpeak(string key) {
@@ -96,8 +105,9 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.SubmitAnswer(answer);
         }
 
-        public void SubmitProgress(int score, int current, int maximum = -1) {
-            LOLSDK.Instance.SubmitProgress(score, current, maximum);
+        public void UpdateProgress(int score) {
+            Score += score;
+            LOLSDK.Instance.SubmitProgress(Score, ++_currentProgress, MAXIMUM_PROGRESS);
         }
 
 #if UNITY_EDITOR
