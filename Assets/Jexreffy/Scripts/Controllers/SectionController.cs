@@ -8,6 +8,7 @@ using TMPro;
 namespace Jexreffy.FractionFarms {
     public class SectionController : MonoBehaviour {
 
+        public Animator SequenceAnimator;
         public Animator FaderAnimator;
         public GameObject InstructionContainer;
         public TextMeshProUGUI Instructions;
@@ -58,6 +59,8 @@ namespace Jexreffy.FractionFarms {
         private const string SCORE = "score";
         private const string FADE_IN_TRIGGER = "FadeIn";
         private const string FADE_OUT_TRIGGER = "FadeOut";
+
+        private const string DEFAULT_ANIMATION = "Default";
 
         void Start() {
             ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
@@ -135,6 +138,8 @@ namespace Jexreffy.FractionFarms {
             OnInstructionStep();
 
             Instructions.text = PlatformController.Instance.GetTextAndSpeak(CurrentStep.LanguageKey);
+            
+            if (SequenceAnimator != null) SequenceAnimator.SetTrigger(CurrentStep.HasAnimation ? CurrentStep.AnimationKey : DEFAULT_ANIMATION);
         }
 
         public void OnSubmitAnswer() {

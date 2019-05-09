@@ -26,10 +26,6 @@ namespace Jexreffy.FractionFarms {
             DisableTiles();
         }
 
-        public override void OnQuestionStep() {
-            //Tile.EnableTile();
-        }
-
         public override void DisableTiles() {
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].DisableTile();
