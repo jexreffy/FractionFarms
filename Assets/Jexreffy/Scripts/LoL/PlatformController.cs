@@ -45,6 +45,12 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.GameIsReady();
         }
 
+        void Start() {
+            if (SceneManager.GetActiveScene().buildIndex == 0) {
+                AdvanceScene();
+            }
+        }
+
         public int Score { get; private set; }
 
         public void AdvanceScene() {
