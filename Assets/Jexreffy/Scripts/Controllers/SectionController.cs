@@ -202,7 +202,6 @@ namespace Jexreffy.FractionFarms {
                 _isError = false;
                 ShowProblem();
             } else {
-                PlatformController.Instance.UpdateProgress();
                 AdvanceStep();
             }
         }

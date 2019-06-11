@@ -111,8 +111,6 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.SubmitAnswer(answer);
         }
 
-        public void UpdateProgress() { UpdateProgress(0); }
-
         public void UpdateProgress(int score) {
             Score += score;
             LOLSDK.Instance.SubmitProgress(Score, ++_currentProgress, MAXIMUM_PROGRESS);

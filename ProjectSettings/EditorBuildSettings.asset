@@ -20,7 +20,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Jexreffy/Scenes/ImproperFractions.unity
     guid: dc6041fdd063b45c6bab78d2b1e672b0
-  - enabled: 1
-    path: Assets/Jexreffy/Scenes/OptimizationGame.unity
-    guid: b166f61d3c68b4824b9129c41e6df0e4
   m_configObjects: {}
