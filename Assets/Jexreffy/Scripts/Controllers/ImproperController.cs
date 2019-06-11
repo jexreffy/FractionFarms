@@ -42,6 +42,11 @@ namespace Jexreffy.FractionFarms {
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
             if (_currentDenominator != Tiles[tileIndex].CurrentDenominator) {
                 _currentDenominator = Tiles[tileIndex].CurrentDenominator;
+                if (yAxis) {
+                    _currentYDenominator = Tiles[tileIndex].CurrentYDenominator;
+                } else {
+                    _currentXDenominator = Tiles[tileIndex].CurrentXDenominator;
+                }
                 AnswerDenominator.text = _currentDenominator.ToString();
             }
         }
@@ -52,6 +57,29 @@ namespace Jexreffy.FractionFarms {
                 _currentNumerator += Tiles[i].GetSelected(1);
             }
             AnswerNumerator.text = _currentNumerator.ToString();
+        }
+
+        public override void UpdateHighlighting(int tileIndex, bool yAxis) {
+            if ((yAxis && (_currentYWhole != tileIndex / XSize || _currentYNumerator != Tiles[tileIndex].CurrentYNumerator)) ||
+                (!yAxis && (_currentXWhole != tileIndex % XSize || _currentXNumerator != Tiles[tileIndex].CurrentXNumerator))) {
+                if (yAxis) {
+                    _currentYWhole = tileIndex / XSize;
+                    _currentYNumerator = Tiles[tileIndex].CurrentYNumerator;
+                } else {
+                    _currentXWhole = tileIndex % XSize;
+                    _currentXNumerator = Tiles[tileIndex].CurrentXNumerator;
+                }
+
+                for (int i = 0; i < Tiles.Count; i++) {
+                    if (i == tileIndex) continue;
+
+                    if (yAxis && i / XSize != tileIndex / XSize) {
+                        Tiles[i].OnHighlightY(i / XSize < tileIndex / XSize ? _currentYDenominator : 0);
+                    } else if (!yAxis && i % XSize != tileIndex % XSize) {
+                        Tiles[i].OnHighlightX(i % XSize < tileIndex % XSize ? _currentXDenominator : 0);
+                    }
+                }
+            }
         }
 
         public override void OnAnswerSubmitted() {

@@ -15,7 +15,7 @@ namespace Jexreffy.LoL {
         public static PlatformController Instance { get { return _instance ?? new GameObject("PlatformController").AddComponent<PlatformController>(); } }
 
         private const string PROJECT_ID = "com.jexreffy.fractionfarms";
-        private const int MAXIMUM_PROGRESS = 13;
+        private const int MAXIMUM_PROGRESS = 14;
 
 #if UNITY_EDITOR
         private const string LANG_FILE = "language.json";
@@ -110,6 +110,8 @@ namespace Jexreffy.LoL {
         public void SubmitAnswer(MultipleChoiceAnswer answer) {
             LOLSDK.Instance.SubmitAnswer(answer);
         }
+
+        public void UpdateProgress() { UpdateProgress(0); }
 
         public void UpdateProgress(int score) {
             Score += score;

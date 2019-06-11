@@ -8,6 +8,9 @@ using TMPro;
 namespace Jexreffy.FractionFarms {
     public class SectionController : MonoBehaviour {
 
+        public int XSize;
+        public int YSize;
+
         public Animator SequenceAnimator;
         public Animator FaderAnimator;
         public GameObject InstructionContainer;
@@ -47,12 +50,21 @@ namespace Jexreffy.FractionFarms {
         protected int _currentStep = -1;
         protected int _currentQuestion;
         protected int _currentScore;
+
+        protected int _currentXWhole;
+        protected int _currentXNumerator;
+        protected int _currentXDenominator = 1;
+
+        protected int _currentYWhole;
+        protected int _currentYNumerator;
+        protected int _currentYDenominator = 1;
         
         protected int _currentWhole;
         protected int _currentNumerator;
         protected int _currentDenominator = 1;
 
         protected bool _isError;
+        protected string _errorText;
 
         private static readonly WaitForSeconds SCENE_DELAY = new WaitForSeconds(0.6f);
 
@@ -71,6 +83,7 @@ namespace Jexreffy.FractionFarms {
         }
 
         protected SequenceStep CurrentStep { get { return SequenceSteps[_currentStep]; } }
+        public bool EnableTiles { get { return CurrentStep.EnableTiles; } }
 
         protected void AdvanceStep() {
             _currentStep++;
@@ -92,13 +105,13 @@ namespace Jexreffy.FractionFarms {
             SubmitButton.gameObject.SetActive(true);
 
             if (AnswerWhole != null) {
-                AnswerWhole.gameObject.SetActive(true);
+                AnswerWhole.gameObject.SetActive(CurrentStep.EnableTiles);
                 AnswerWhole.text = "0";
             }
-            AnswerNumerator.gameObject.SetActive(true);
+            AnswerNumerator.gameObject.SetActive(CurrentStep.EnableTiles);
             AnswerNumerator.text = "0";
-            AnswerDivider.gameObject.SetActive(true);
-            AnswerDenominator.gameObject.SetActive(true);
+            AnswerDivider.gameObject.SetActive(CurrentStep.EnableTiles);
+            AnswerDenominator.gameObject.SetActive(CurrentStep.EnableTiles);
             AnswerDenominator.text = "1";
 
             _currentScore = CurrentStep.PointsAvailable;
@@ -122,6 +135,8 @@ namespace Jexreffy.FractionFarms {
             }
             ProblemYNumerator.text = ProblemYNumerators[_currentQuestion].ToString();
             ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
+
+            if (SequenceAnimator != null) SequenceAnimator.SetTrigger(DEFAULT_ANIMATION);
         }
 
         private void ShowInstruction() {
@@ -137,7 +152,7 @@ namespace Jexreffy.FractionFarms {
 
             OnInstructionStep();
 
-            Instructions.text = PlatformController.Instance.GetTextAndSpeak(CurrentStep.LanguageKey);
+            Instructions.text = PlatformController.Instance.GetTextAndSpeak(_isError ? _errorText : CurrentStep.LanguageKey);
             
             if (SequenceAnimator != null) SequenceAnimator.SetTrigger(CurrentStep.HasAnimation ? CurrentStep.AnimationKey : DEFAULT_ANIMATION);
         }
@@ -148,7 +163,15 @@ namespace Jexreffy.FractionFarms {
                 _currentDenominator == AnswerDenominators[_currentQuestion]) {
                 _currentWhole = 0;
                 _currentNumerator = 0;
-                _currentDenominator = 0;
+                _currentDenominator = 1;
+
+                _currentXWhole = 0;
+                _currentXNumerator = 0;
+                _currentXDenominator = 1;
+
+                _currentYWhole = 0;
+                _currentYNumerator = 0;
+                _currentYDenominator = 1;
                 PlatformController.Instance.UpdateProgress(_currentScore);
                 ScoreValue.text = PlatformController.Instance.Score.ToString();
                 _currentQuestion++;
@@ -156,6 +179,18 @@ namespace Jexreffy.FractionFarms {
             } else {
                 _isError = true;
                 _currentScore = Mathf.Max(_currentScore - CurrentStep.IncorrectPenalty, 0);
+
+                if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
+                    _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
+                    _errorText = CurrentStep.DenominatorKey;
+                } else if (_currentXWhole != ProblemXWholes[_currentQuestion] ||
+                           _currentYWhole != ProblemYWholes[_currentQuestion] ||
+                           _currentXNumerator != ProblemXNumerators[_currentQuestion] ||
+                           _currentYNumerator != ProblemYNumerators[_currentQuestion]) {
+                    _errorText = CurrentStep.NumeratorKey;
+                } else {
+                    _errorText = CurrentStep.LanguageKey;
+                }
                 ShowInstruction();
             }
 
@@ -167,6 +202,7 @@ namespace Jexreffy.FractionFarms {
                 _isError = false;
                 ShowProblem();
             } else {
+                PlatformController.Instance.UpdateProgress();
                 AdvanceStep();
             }
         }
@@ -181,6 +217,7 @@ namespace Jexreffy.FractionFarms {
         public virtual void DisableTiles() { }
         public virtual void UpdateDenominator(int tileIndex, bool yAxis) { }
         public virtual void UpdateNumerator() { }
+        public virtual void UpdateHighlighting(int tileIndex, bool yAxis) { }
         public virtual void OnAnswerSubmitted() { }
     }
 }

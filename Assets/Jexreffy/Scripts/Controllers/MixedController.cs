@@ -8,12 +8,7 @@ using TMPro;
 namespace Jexreffy.FractionFarms {
     public sealed class MixedController : SectionController {
 
-        public int XSize;
-        public int YSize;
         public List<UnitTile> Tiles = new List<UnitTile>();
-
-        private int _xDenominator = 1;
-        private int _yDenominator = 1;
         
         void Awake() {
             for (int i = 0; i < Tiles.Count; i++) {
@@ -35,12 +30,12 @@ namespace Jexreffy.FractionFarms {
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
             if (Tiles[tileIndex].IsTileEnabled) {
                 if (yAxis) {
-                    _yDenominator = Tiles[tileIndex].CurrentYDenominator;
+                    _currentYDenominator = Tiles[tileIndex].CurrentYDenominator;
                 } else {
-                    _xDenominator = Tiles[tileIndex].CurrentXDenominator;
+                    _currentXDenominator = Tiles[tileIndex].CurrentXDenominator;
                 }
                 
-                _currentDenominator = _xDenominator * _yDenominator;
+                _currentDenominator = _currentXDenominator * _currentYDenominator;
                 AnswerDenominator.text = _currentDenominator.ToString();
                 UpdateNumerator();
 
@@ -49,16 +44,27 @@ namespace Jexreffy.FractionFarms {
 
                     if ((yAxis && i / XSize != tileIndex / XSize) || (!yAxis && i % XSize != tileIndex % XSize)) {
                         Tiles[i].ResetTile(true, !yAxis, yAxis);
-                    } else if ((yAxis && i / XSize == tileIndex / XSize && Tiles[i].CurrentXDenominator > 1 && Tiles[i].CurrentXDenominator != _xDenominator) ||
-                               (!yAxis && i % XSize == tileIndex % XSize && Tiles[i].CurrentYDenominator > 1 && Tiles[i].CurrentYDenominator != _yDenominator)) {
+                    } else if ((yAxis && i / XSize == tileIndex / XSize && Tiles[i].CurrentXDenominator > 1 && Tiles[i].CurrentXDenominator != _currentXDenominator) ||
+                               (!yAxis && i % XSize == tileIndex % XSize && Tiles[i].CurrentYDenominator > 1 && Tiles[i].CurrentYDenominator != _currentYDenominator)) {
 
                         if (yAxis) {
-                            _xDenominator = 1;
+                            _currentXDenominator = 1;
                         } else {
-                            _yDenominator = 1;
+                            _currentYDenominator = 1;
                         }
                         Tiles[i].ResetTile(true, yAxis, !yAxis);
                         UpdateNumerator();
+                    }
+
+                    
+                    if (yAxis && i / XSize != tileIndex / XSize) {
+                        _currentYWhole = 0;
+                        _currentYNumerator = 0;
+                        Tiles[i].OnHighlightY(0);
+                    } else if (!yAxis && i % XSize != tileIndex % XSize) {
+                        _currentXWhole = 0;
+                        _currentXNumerator = 0;
+                        Tiles[i].OnHighlightX(0);
                     }
                 }
             }
@@ -76,9 +82,29 @@ namespace Jexreffy.FractionFarms {
             AnswerNumerator.text = _currentNumerator.ToString();
         }
 
+        public override void UpdateHighlighting(int tileIndex, bool yAxis) {
+            if (Tiles[tileIndex].IsTileEnabled) {
+                if (yAxis) {
+                    _currentYWhole = tileIndex / XSize;
+                    _currentYNumerator = Tiles[tileIndex].CurrentYNumerator;
+                } else {
+                    _currentXWhole = tileIndex % XSize;
+                    _currentXNumerator = Tiles[tileIndex].CurrentXNumerator;
+                }
+
+                for (int i = 0; i < Tiles.Count; i++) {
+                    if (i == tileIndex) continue;
+
+                    if (yAxis && i / XSize != tileIndex / XSize) {
+                        Tiles[i].OnHighlightY(i / XSize < tileIndex / XSize ? 1 : 0);
+                    } else if (!yAxis && i % XSize != tileIndex % XSize) {
+                        Tiles[i].OnHighlightX(i % XSize < tileIndex % XSize ? 1 : 0);
+                    }
+                }
+            }
+        }
+
         public override void OnAnswerSubmitted() {
-            _xDenominator = 1;
-            _yDenominator = 1;
             for (int i = 0; i < Tiles.Count; i++) {
                 Tiles[i].ResetTile();
             }
