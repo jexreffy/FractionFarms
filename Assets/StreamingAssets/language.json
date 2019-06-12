@@ -1,7 +1,6 @@
 {
   "_meta": {
     "maxChars": {
-      "welcome": 162,
       "score": 11,
       "basics_denominator_01": 162,
       "basics_denominator_02": 162,
@@ -45,8 +44,6 @@
     }
   },
   "en": {
-    "title": "Fraction Farms",
-    "welcome": "Welcome to Fraction Farms!",
     "score": "Score:",
     "basics_denominator_01": "Here at Fraction Farms, we showcase how to divide up land in order to produce crops more efficiently.",
     "basics_denominator_02": "We do this by taking Unit Tiles and breaking their sides into fractional lengths.",
