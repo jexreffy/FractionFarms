@@ -42,6 +42,11 @@ namespace Jexreffy.LoL {
             LoadMockData();
 #endif
 
+            LOLSDK.Instance.StartGameReceived += HandleStartGame;
+            LOLSDK.Instance.GameStateChanged += HandleGameStateChange;
+            LOLSDK.Instance.QuestionsReceived += HandleQuestions;
+            LOLSDK.Instance.LanguageDefsReceived += HandleLanguageDefs;
+
             LOLSDK.Instance.GameIsReady();
         }
 
@@ -60,22 +65,21 @@ namespace Jexreffy.LoL {
         public JSONNode StartData { get; private set; }
         public JSONNode LanguageData { get; private set; }
         public MultipleChoiceQuestionList QuestionData { get; private set; }
+        public bool DataLoaded { get; private set; }
 
-        void HandleStartGame(string json) {
+        public void HandleStartGame(string json) {
             StartData = JSON.Parse(json);
         }
         
-        void HandleGameStateChange(GameState gameState) {
-            Debug.Log("HandleGameStateChange");
-        }
+        public void HandleGameStateChange(GameState gameState) { }
         
-        void HandleQuestions(MultipleChoiceQuestionList questionList) {
-            Debug.Log("HandleQuestions");
+        public void HandleQuestions(MultipleChoiceQuestionList questionList) {
             QuestionData = questionList;
         }
         
-        void HandleLanguageDefs(string json) {
+        public void HandleLanguageDefs(string json) {
             LanguageData = JSON.Parse(json);
+            DataLoaded = true;
         }
 
         public string GetText(string key) {
@@ -115,6 +119,7 @@ namespace Jexreffy.LoL {
             Score += score;
             LOLSDK.Instance.SubmitProgress(Score, ++_currentProgress, MAXIMUM_PROGRESS);
         }
+
 
 #if UNITY_EDITOR
         private void LoadMockData() {

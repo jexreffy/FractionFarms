@@ -302,6 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdafffac9e72947569d3fef039dc82e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SceneAnimator: {fileID: 106037937}
   FaderAnimator: {fileID: 360936976}
 --- !u!95 &106037937
 Animator:
