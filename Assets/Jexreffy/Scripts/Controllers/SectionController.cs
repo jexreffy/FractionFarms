@@ -66,30 +66,31 @@ namespace Jexreffy.FractionFarms {
         protected bool _isError;
         protected string _errorText;
 
-        private static readonly WaitForSeconds SCENE_DELAY = new WaitForSeconds(0.6f);
+        private static readonly WaitForSeconds SceneDelay = new WaitForSeconds(0.6f);
+        private static readonly int Default = Animator.StringToHash("Default");
+        private static readonly int FadeIn = Animator.StringToHash("FadeIn");
+        private static readonly int FadeOut = Animator.StringToHash("FadeOut");
+        
+        private static readonly string DEFAULT_ANIMATION = "Default";
 
         private const string SCORE = "score";
-        private const string FADE_IN_TRIGGER = "FadeIn";
-        private const string FADE_OUT_TRIGGER = "FadeOut";
 
-        private const string DEFAULT_ANIMATION = "Default";
-
-        void Start() {
+        private void Start() {
             ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
             ScoreValue.text = PlatformController.Instance.Score.ToString();
 
             AdvanceStep();
-            FaderAnimator.SetTrigger(FADE_IN_TRIGGER);
+            FaderAnimator.SetTrigger(FadeIn);
         }
 
         protected SequenceStep CurrentStep { get { return SequenceSteps[_currentStep]; } }
         public bool EnableTiles { get { return CurrentStep.EnableTiles; } }
 
-        protected void AdvanceStep() {
+        private void AdvanceStep() {
             _currentStep++;
 
             if (_currentStep >= SequenceSteps.Count) {
-                FaderAnimator.SetTrigger(FADE_OUT_TRIGGER);
+                FaderAnimator.SetTrigger(FadeOut);
                 StartCoroutine(DelaySceneChange());
             } else if (CurrentStep.IsProblem) {
                 ShowProblem();
@@ -136,7 +137,7 @@ namespace Jexreffy.FractionFarms {
             ProblemYNumerator.text = ProblemYNumerators[_currentQuestion].ToString();
             ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
 
-            if (SequenceAnimator != null) SequenceAnimator.SetTrigger(DEFAULT_ANIMATION);
+            if (SequenceAnimator != null) SequenceAnimator.SetTrigger(Default);
         }
 
         private void ShowInstruction() {
@@ -206,9 +207,9 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        public IEnumerator DelaySceneChange() {
-            yield return SCENE_DELAY;
-            PlatformController.Instance.AdvanceScene();
+        public static IEnumerator DelaySceneChange() {
+            yield return SceneDelay;
+            PlatformController.AdvanceScene();
         }
 
         public virtual void OnInstructionStep() { }

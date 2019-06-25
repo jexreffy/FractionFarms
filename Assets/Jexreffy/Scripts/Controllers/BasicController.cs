@@ -10,7 +10,7 @@ namespace Jexreffy.FractionFarms {
 
         public UnitTile Tile;
 
-        void Awake() {
+        private void Awake() {
             Tile.Parent = this;
         }
 
@@ -27,23 +27,23 @@ namespace Jexreffy.FractionFarms {
         }
 
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
-            if (_currentDenominator != Tile.CurrentDenominator) {
-                _currentDenominator = Tile.CurrentDenominator;
-                if (yAxis) {
-                    _currentYDenominator = Tile.CurrentYDenominator;
-                } else {
-                    _currentXDenominator = Tile.CurrentXDenominator;
-                }
-                AnswerDenominator.text = _currentDenominator.ToString();
+            if (_currentDenominator == Tile.CurrentDenominator) return;
+            
+            _currentDenominator = Tile.CurrentDenominator;
+            if (yAxis) {
+                _currentYDenominator = Tile.CurrentYDenominator;
+            } else {
+                _currentXDenominator = Tile.CurrentXDenominator;
             }
+            AnswerDenominator.text = _currentDenominator.ToString();
         }
 
         public override void UpdateNumerator() {
-            int selectedCount = Tile.GetSelected(1);
-            if (_currentNumerator != selectedCount) {
-                _currentNumerator = selectedCount;
-                AnswerNumerator.text = _currentNumerator.ToString();
-            }
+            var selectedCount = Tile.GetSelected(1);
+            if (_currentNumerator == selectedCount) return;
+            
+            _currentNumerator    = selectedCount;
+            AnswerNumerator.text = _currentNumerator.ToString();
         }
 
         public override void UpdateHighlighting(int tileIndex, bool yAxis) {

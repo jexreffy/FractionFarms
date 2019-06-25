@@ -10,31 +10,30 @@ namespace Jexreffy.FractionFarms {
 
         private bool _gameReady;
 
-        private static readonly WaitForSeconds SCENE_DELAY = new WaitForSeconds(0.6f);
-
-        private const string FADE_IN_TRIGGER = "FadeIn";
-        private const string FADE_OUT_TRIGGER = "FadeOut";
-        private const string GAME_READY = "GameStarted";
+        private static readonly WaitForSeconds SceneDelay = new WaitForSeconds(0.6f);
+        private static readonly int FadeIn = Animator.StringToHash("FadeIn");
+        private static readonly int FadeOut = Animator.StringToHash("FadeOut");
+        private static readonly int GameStarted = Animator.StringToHash("GameStarted");
 
         void Start() {
-            FaderAnimator.SetTrigger(FADE_IN_TRIGGER);
+            FaderAnimator.SetTrigger(FadeIn);
         }
 
-        void Update() {
-            if (!_gameReady && PlatformController.Instance.DataLoaded) {
-                _gameReady = true;
-                SceneAnimator.SetTrigger(GAME_READY);
-            }
+        private void Update() {
+            if (_gameReady || !PlatformController.Instance.DataLoaded) return;
+            
+            _gameReady = true;
+            SceneAnimator.SetTrigger(GameStarted);
         }
 
         public void OnTitleAdvance() {
-            FaderAnimator.SetTrigger(FADE_OUT_TRIGGER);
+            FaderAnimator.SetTrigger(FadeOut);
             StartCoroutine(DelaySceneChange());
         }
 
-        public IEnumerator DelaySceneChange() {
-            yield return SCENE_DELAY;
-            PlatformController.Instance.AdvanceScene();
+        private static IEnumerator DelaySceneChange() {
+            yield return SceneDelay;
+            PlatformController.AdvanceScene();
         }
     }
 }

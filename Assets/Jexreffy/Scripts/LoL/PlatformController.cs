@@ -50,7 +50,7 @@ namespace Jexreffy.LoL {
             LOLSDK.Instance.GameIsReady();
         }
 
-        void Start() {
+        private void Start() {
             if (SceneManager.GetActiveScene().buildIndex == 0) {
                 AdvanceScene();
             }
@@ -58,26 +58,26 @@ namespace Jexreffy.LoL {
 
         public int Score { get; private set; }
 
-        public void AdvanceScene() {
+        public static void AdvanceScene() {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
         }
 
-        public JSONNode StartData { get; private set; }
-        public JSONNode LanguageData { get; private set; }
-        public MultipleChoiceQuestionList QuestionData { get; private set; }
+        private JSONNode StartData { get; set; }
+        private JSONNode LanguageData { get; set; }
+        private MultipleChoiceQuestionList QuestionData { get; set; }
         public bool DataLoaded { get; private set; }
 
-        public void HandleStartGame(string json) {
+        private void HandleStartGame(string json) {
             StartData = JSON.Parse(json);
         }
-        
-        public void HandleGameStateChange(GameState gameState) { }
-        
-        public void HandleQuestions(MultipleChoiceQuestionList questionList) {
+
+        private void HandleGameStateChange(GameState gameState) { }
+
+        private void HandleQuestions(MultipleChoiceQuestionList questionList) {
             QuestionData = questionList;
         }
-        
-        public void HandleLanguageDefs(string json) {
+
+        private void HandleLanguageDefs(string json) {
             LanguageData = JSON.Parse(json);
             DataLoaded = true;
         }
@@ -123,35 +123,35 @@ namespace Jexreffy.LoL {
 
 #if UNITY_EDITOR
         private void LoadMockData() {
-            string startDataPath = Path.Combine(Application.streamingAssetsPath, START_FILE);
-            string langCode = "en";
+            var startDataPath = Path.Combine(Application.streamingAssetsPath, START_FILE);
+            var langCode = "en";
 
             Debug.Log(Time.time + ": Start File Exists? " + File.Exists(startDataPath).ToString());
 
             if (File.Exists(startDataPath)) {
-                string startData = File.ReadAllText(startDataPath);
-                JSONNode startGamePayload = JSON.Parse(startData);
+                var startData = File.ReadAllText(startDataPath);
+                var startGamePayload = JSON.Parse(startData);
                 langCode = startGamePayload["languageCode"];
                 HandleStartGame(startData);
             }
 
-            string langPath = Path.Combine(Application.streamingAssetsPath, LANG_FILE);
+            var langPath = Path.Combine(Application.streamingAssetsPath, LANG_FILE);
 
             Debug.Log(Time.time + ": Lang File Exists? " + File.Exists(langPath).ToString());
 
             if (File.Exists(langPath)) {
-                string langDataAsJson = File.ReadAllText(langPath);
-                JSONNode langDefs = JSON.Parse(langDataAsJson);
+                var langDataAsJson = File.ReadAllText(langPath);
+                var langDefs = JSON.Parse(langDataAsJson);
                 HandleLanguageDefs(langDefs[langCode].ToString());
             }
 
-            string questionsPath = Path.Combine(Application.streamingAssetsPath, QUESTION_FILE);
+            var questionsPath = Path.Combine(Application.streamingAssetsPath, QUESTION_FILE);
 
             Debug.Log(Time.time + ": Question File Exists? " + File.Exists(langPath).ToString());
 
             if (File.Exists(questionsPath)) {
-                string questionsData = File.ReadAllText(questionsPath);
-                MultipleChoiceQuestionList questionPayload = MultipleChoiceQuestionList.CreateFromJSON(questionsData);
+                var questionsData = File.ReadAllText(questionsPath);
+                var questionPayload = MultipleChoiceQuestionList.CreateFromJSON(questionsData);
                 HandleQuestions(questionPayload);
             }
         }

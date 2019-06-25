@@ -11,15 +11,18 @@ namespace Jexreffy.FractionFarms {
         public TextMeshProUGUI ScoreValue;
 
         public Animator FaderAnimator;
+        
+        private static readonly int FadeIn = Animator.StringToHash("FadeIn");
 
         private const string SCORE = "score";
-        private const string FADE_IN_TRIGGER = "FadeIn";
 
-        void Awake() {
+        private void Awake() {
             ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
             ScoreValue.text = PlatformController.Instance.Score.ToString();
 
-            FaderAnimator.SetTrigger(FADE_IN_TRIGGER);
+            FaderAnimator.SetTrigger(FadeIn);
+            
+            PlatformController.Instance.CompleteGame();
         }
     }
 }
