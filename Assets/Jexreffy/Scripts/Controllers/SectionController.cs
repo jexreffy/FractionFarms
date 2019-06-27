@@ -43,6 +43,7 @@ namespace Jexreffy.FractionFarms {
         public List<int> ProblemYWholes = new List<int>();
         public List<int> ProblemYNumerators = new List<int>();
         public List<int> ProblemYDenominators = new List<int>();
+        public List<int> AnswerTiles = new List<int>();
         public List<int> AnswerWholes = new List<int>();
         public List<int> AnswerNumerators = new List<int>();
         public List<int> AnswerDenominators = new List<int>();
@@ -50,6 +51,7 @@ namespace Jexreffy.FractionFarms {
         protected int _currentStep = -1;
         protected int _currentQuestion;
         protected int _currentScore;
+        protected int _currentTile = -1;
 
         protected int _currentXWhole;
         protected int _currentXNumerator;
@@ -84,7 +86,7 @@ namespace Jexreffy.FractionFarms {
         }
 
         protected SequenceStep CurrentStep { get { return SequenceSteps[_currentStep]; } }
-        public bool EnableTiles { get { return CurrentStep.EnableTiles; } }
+        public bool EnableTiles => CurrentStep.EnableTiles;
 
         private void AdvanceStep() {
             _currentStep++;
@@ -159,9 +161,14 @@ namespace Jexreffy.FractionFarms {
         }
 
         public void OnSubmitAnswer() {
-            if (_currentWhole == AnswerWholes[_currentQuestion] &&
+            if (_currentTile == AnswerTiles[_currentQuestion] &&
+                _currentWhole == AnswerWholes[_currentQuestion] &&
                 _currentNumerator == AnswerNumerators[_currentQuestion] &&
+                _currentXDenominator == ProblemXDenominators[_currentQuestion] &&
+                _currentYDenominator == ProblemYDenominators[_currentQuestion] &&
                 _currentDenominator == AnswerDenominators[_currentQuestion]) {
+                _currentTile = -1;
+                
                 _currentWhole = 0;
                 _currentNumerator = 0;
                 _currentDenominator = 1;
@@ -173,6 +180,7 @@ namespace Jexreffy.FractionFarms {
                 _currentYWhole = 0;
                 _currentYNumerator = 0;
                 _currentYDenominator = 1;
+                
                 PlatformController.Instance.UpdateProgress(_currentScore);
                 ScoreValue.text = PlatformController.Instance.Score.ToString();
                 _currentQuestion++;
@@ -181,9 +189,13 @@ namespace Jexreffy.FractionFarms {
                 _isError = true;
                 _currentScore = Mathf.Max(_currentScore - CurrentStep.IncorrectPenalty, 0);
 
-                if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
-                    _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
+                if (_currentDenominator != AnswerDenominators[_currentQuestion]) {
                     _errorText = CurrentStep.DenominatorKey;
+                } else if (_currentTile != AnswerTiles[_currentQuestion]) {
+                    _errorText = CurrentStep.TileKey;
+                } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
+                           _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
+                    _errorText = CurrentStep.ReverseKey;
                 } else if (_currentXWhole != ProblemXWholes[_currentQuestion] ||
                            _currentYWhole != ProblemYWholes[_currentQuestion] ||
                            _currentXNumerator != ProblemXNumerators[_currentQuestion] ||

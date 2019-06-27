@@ -41,7 +41,7 @@ namespace Jexreffy.FractionFarms {
             AnswerDenominator.text = _currentDenominator.ToString();
             UpdateNumerator();
 
-            for (int i = 0; i < Tiles.Count; i++) {
+            for (var i = 0; i < Tiles.Count; i++) {
                 if (i == tileIndex) continue;
 
                 if ((yAxis && i / XSize != tileIndex / XSize) || (!yAxis && i % XSize != tileIndex % XSize)) {
@@ -68,6 +68,14 @@ namespace Jexreffy.FractionFarms {
                     _currentXNumerator = 0;
                     Tiles[i].OnHighlightX(0);
                 }
+            }
+
+            _currentTile = -1;
+            for (var i = 0; i < Tiles.Count; i++) {
+                if (Tiles[i].CurrentXDenominator <= 1 || Tiles[i].CurrentYDenominator <= 1) continue;
+                
+                _currentTile = i;
+                break;
             }
         }
 

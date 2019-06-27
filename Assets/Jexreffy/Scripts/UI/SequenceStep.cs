@@ -9,6 +9,8 @@ namespace Jexreffy.FractionFarms {
         public int IncorrectPenalty;
         public string DenominatorKey;
         public string NumeratorKey;
+        public string ReverseKey;
+        public string TileKey;
         public string LanguageKey;
         public bool HasAnimation;
         public string AnimationKey;

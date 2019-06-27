@@ -12,7 +12,7 @@ namespace Jexreffy.LoL {
         private int _currentProgress;
 
         private static PlatformController _instance;
-        public static PlatformController Instance { get { return _instance ?? new GameObject("PlatformController").AddComponent<PlatformController>(); } }
+        public static PlatformController Instance => _instance ? _instance : new GameObject("PlatformController").AddComponent<PlatformController>();
 
         private const string PROJECT_ID = "com.jexreffy.fractionfarms";
         private const int MAXIMUM_PROGRESS = 14;
@@ -23,7 +23,7 @@ namespace Jexreffy.LoL {
         private const string START_FILE = "startGame.json";
 #endif
 
-        void Awake() {
+        private void Awake() {
             if (_instance != null) {
                 Destroy(this);
                 return;

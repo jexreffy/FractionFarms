@@ -28,7 +28,8 @@ namespace Jexreffy.FractionFarms {
 
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
             if (_currentDenominator == Tile.CurrentDenominator) return;
-            
+
+            _currentTile = 0;
             _currentDenominator = Tile.CurrentDenominator;
             if (yAxis) {
                 _currentYDenominator = Tile.CurrentYDenominator;
