@@ -35,8 +35,10 @@ namespace Jexreffy.FractionFarms {
 
         public List<Color> DefaultColors = new List<Color>();
         public List<ColorBlock> ButtonColors = new List<ColorBlock>();
-        public Color HighlightColor = Color.yellow;
-
+        public Color XHighlightColor = Color.yellow;
+        public Color YHighlightColor = Color.blue;
+        public Color XYHighlightColor = Color.green;
+        
         [HideInInspector]
         public SectionController Parent;
         [HideInInspector]
@@ -207,7 +209,8 @@ namespace Jexreffy.FractionFarms {
 
             for (var i = 0; i < _buttonObjectPool.Count; i++) {
                 var isActive = i % MaxDenominator < CurrentXDenominator && i / MaxDenominator < CurrentYDenominator;
-                var isHighlighted = i % MaxDenominator < CurrentXNumerator || i / MaxDenominator < CurrentYNumerator;
+                var isXHighlighted = i % MaxDenominator < CurrentXNumerator;
+                var isYHighlighted = i / MaxDenominator < CurrentYNumerator;
                 _buttonObjectPool[i].SetActive(isActive);
                 _highlightObjectPool[i].SetActive(isActive);
                 if (isActive) {
@@ -220,7 +223,16 @@ namespace Jexreffy.FractionFarms {
                     _highlightTransformPool[i].anchorMax = new Vector2(_buttonTransformPool[i].anchorMin.x + (1 % MaxDenominator / (float)CurrentXDenominator), (i + MaxDenominator) / MaxDenominator / (float)CurrentYDenominator);
                     _highlightTransformPool[i].offsetMin = _highlightSpacer;
                     _highlightTransformPool[i].offsetMax = _highlightSpacer;
-                    _highlightPool[i].color = isHighlighted ? HighlightColor : DefaultColors[0];
+                    if (isXHighlighted && isYHighlighted) {
+                        _highlightPool[i].color = XYHighlightColor;
+                    } else if (isXHighlighted) {
+                        _highlightPool[i].color = XHighlightColor;
+                    } else if (isYHighlighted) {
+                        _highlightPool[i].color = YHighlightColor;
+                    } else {
+                        _highlightPool[i].color = DefaultColors[0];
+                    }
+                    //_highlightPool[i].color = isXHighlighted || isYHighlighted ? XHighlightColor : DefaultColors[0];
                 } else {
                     _selected[i] = 0;
                     _buttonPool[i].image.color = DefaultColors[0];
