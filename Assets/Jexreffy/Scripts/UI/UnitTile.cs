@@ -232,7 +232,6 @@ namespace Jexreffy.FractionFarms {
                     } else {
                         _highlightPool[i].color = DefaultColors[0];
                     }
-                    //_highlightPool[i].color = isXHighlighted || isYHighlighted ? XHighlightColor : DefaultColors[0];
                 } else {
                     _selected[i] = 0;
                     _buttonPool[i].image.color = DefaultColors[0];

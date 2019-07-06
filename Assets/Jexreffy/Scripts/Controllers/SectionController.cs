@@ -15,8 +15,12 @@ namespace Jexreffy.FractionFarms {
         public Animator FaderAnimator;
         public GameObject InstructionContainer;
         public TextMeshProUGUI Instructions;
+        public Image SkipSprite;
         public Button SkipButton;
         public Button SubmitButton;
+
+        public Sprite AdvanceSprite;
+        public Sprite HintSprite;
 
         public RectTransform ScoreTransform;
         public TextMeshProUGUI ScoreLabel;
@@ -68,12 +72,16 @@ namespace Jexreffy.FractionFarms {
         protected bool _isError;
         protected string _errorText;
 
+        protected bool _showHint;
+
+        private static readonly WaitForSeconds HintDelay = new WaitForSeconds(5f);
         private static readonly WaitForSeconds SceneDelay = new WaitForSeconds(0.6f);
         private static readonly int Default = Animator.StringToHash("Default");
         private static readonly int FadeIn = Animator.StringToHash("FadeIn");
         private static readonly int FadeOut = Animator.StringToHash("FadeOut");
-        
-        private static readonly string DEFAULT_ANIMATION = "Default";
+
+        private const string DEFAULT_ANIMATION = "Default";
+        private const string HINT_SUBMIT = "hint_submit";
 
         private const string SCORE = "score";
 
@@ -101,25 +109,26 @@ namespace Jexreffy.FractionFarms {
             }
         }
 
-        private void ShowProblem() {
+        private void ShowProblem(bool hint = false) {
             InstructionContainer.SetActive(false);
             ProblemContainer.SetActive(true);
-            SkipButton.gameObject.SetActive(false);
+            SkipSprite.sprite = HintSprite;
             SubmitButton.gameObject.SetActive(true);
-
-            if (AnswerWhole != null) {
-                AnswerWhole.gameObject.SetActive(CurrentStep.EnableTiles);
-                AnswerWhole.text = "0";
-            }
+            
+            if (AnswerWhole != null) AnswerWhole.gameObject.SetActive(CurrentStep.EnableTiles);
             AnswerNumerator.gameObject.SetActive(CurrentStep.EnableTiles);
-            AnswerNumerator.text = "0";
             AnswerDivider.gameObject.SetActive(CurrentStep.EnableTiles);
             AnswerDenominator.gameObject.SetActive(CurrentStep.EnableTiles);
-            AnswerDenominator.text = "1";
 
-            _currentScore = CurrentStep.PointsAvailable;
+            if (!hint) {
+                if (AnswerWhole != null) AnswerWhole.text = "0";
+                AnswerNumerator.text = "0";
+                AnswerDenominator.text = "1";
 
-            OnQuestionStep();
+                if (!_isError) _currentScore = CurrentStep.PointsAvailable;
+
+                OnQuestionStep();
+            }
 
             if (ProblemXWhole != null && ProblemXWholes[_currentQuestion] > 0) {
                 ProblemXWhole.gameObject.SetActive(true);
@@ -142,10 +151,10 @@ namespace Jexreffy.FractionFarms {
             if (SequenceAnimator != null) SequenceAnimator.SetTrigger(Default);
         }
 
-        private void ShowInstruction() {
+        private void ShowInstruction(bool hint = false) {
             InstructionContainer.SetActive(true);
             ProblemContainer.SetActive(false);
-            SkipButton.gameObject.SetActive(true);
+            SkipSprite.sprite = AdvanceSprite;
             SubmitButton.gameObject.SetActive(false);
 
             if (AnswerWhole != null) AnswerWhole.gameObject.SetActive(false);
@@ -153,7 +162,7 @@ namespace Jexreffy.FractionFarms {
             AnswerDivider.gameObject.SetActive(false);
             AnswerDenominator.gameObject.SetActive(false);
 
-            OnInstructionStep();
+            if (!hint) OnInstructionStep();
 
             Instructions.text = PlatformController.Instance.GetTextAndSpeak(_isError ? _errorText : CurrentStep.LanguageKey);
             
@@ -161,62 +170,106 @@ namespace Jexreffy.FractionFarms {
         }
 
         public void OnSubmitAnswer() {
-            if (_currentTile == AnswerTiles[_currentQuestion] &&
-                _currentWhole == AnswerWholes[_currentQuestion] &&
-                _currentNumerator == AnswerNumerators[_currentQuestion] &&
-                _currentXDenominator == ProblemXDenominators[_currentQuestion] &&
-                _currentYDenominator == ProblemYDenominators[_currentQuestion] &&
-                _currentDenominator == AnswerDenominators[_currentQuestion]) {
-                _currentTile = -1;
-                
-                _currentWhole = 0;
-                _currentNumerator = 0;
-                _currentDenominator = 1;
-
-                _currentXWhole = 0;
-                _currentXNumerator = 0;
-                _currentXDenominator = 1;
-
-                _currentYWhole = 0;
-                _currentYNumerator = 0;
-                _currentYDenominator = 1;
-                
+            if (IsProblemCorrect) {
                 PlatformController.Instance.UpdateProgress(_currentScore);
                 ScoreValue.text = PlatformController.Instance.Score.ToString();
                 _currentQuestion++;
                 AdvanceStep();
             } else {
-                _isError = true;
                 _currentScore = Mathf.Max(_currentScore - CurrentStep.IncorrectPenalty, 0);
 
-                if (_currentDenominator != AnswerDenominators[_currentQuestion]) {
-                    _errorText = CurrentStep.DenominatorKey;
-                } else if (_currentTile != AnswerTiles[_currentQuestion]) {
-                    _errorText = CurrentStep.TileKey;
-                } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
-                           _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
-                    _errorText = CurrentStep.ReverseKey;
-                } else if (_currentXWhole != ProblemXWholes[_currentQuestion] ||
-                           _currentYWhole != ProblemYWholes[_currentQuestion] ||
-                           _currentXNumerator != ProblemXNumerators[_currentQuestion] ||
-                           _currentYNumerator != ProblemYNumerators[_currentQuestion]) {
-                    _errorText = CurrentStep.NumeratorKey;
-                } else {
-                    _errorText = CurrentStep.LanguageKey;
-                }
+                EvaluateProblemProgress();
                 ShowInstruction();
             }
+            
+            _currentTile = -1;
+                
+            _currentWhole       = 0;
+            _currentNumerator   = 0;
+            _currentDenominator = 1;
+
+            _currentXWhole       = 0;
+            _currentXNumerator   = 0;
+            _currentXDenominator = 1;
+
+            _currentYWhole       = 0;
+            _currentYNumerator   = 0;
+            _currentYDenominator = 1;
 
             OnAnswerSubmitted();
         }
 
         public void OnSkipInstructions() {
-            if (_isError) {
-                _isError = false;
+            if (!_isError && CurrentStep.IsProblem) {
+                if (_showHint) return;
+                
+                StartCoroutine(ShowHint());
+            } else if (_isError) {
                 ShowProblem();
+                _isError = false;
             } else {
                 AdvanceStep();
             }
+        }
+
+        private bool IsProblemCorrect =>
+            _currentTile         == AnswerTiles[_currentQuestion]          &&
+            _currentWhole        == AnswerWholes[_currentQuestion]         &&
+            _currentNumerator    == AnswerNumerators[_currentQuestion]     &&
+            _currentXDenominator == ProblemXDenominators[_currentQuestion] &&
+            _currentYDenominator == ProblemYDenominators[_currentQuestion] &&
+            _currentDenominator  == AnswerDenominators[_currentQuestion];
+
+        private void EvaluateProblemProgress(bool hint = false) {
+            _isError = true;
+            
+            if (_currentDenominator != AnswerDenominators[_currentQuestion]) {
+                if (_currentXDenominator != ProblemXDenominators[_currentQuestion] &&
+                    _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
+                    _errorText = CurrentStep.DenominatorKey;
+                } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion]) {
+                    _errorText = $"{CurrentStep.DenominatorKey}_x";
+                } else {
+                    _errorText = $"{CurrentStep.DenominatorKey}_y";
+                }
+            } else if (_currentTile != AnswerTiles[_currentQuestion]) {
+                _errorText = CurrentStep.TileKey;
+            } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
+                       _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
+                _errorText = CurrentStep.ReverseKey;
+            } else if (CurrentStep.EnableTiles &&
+                       (_currentXWhole     != ProblemXWholes[_currentQuestion]     ||
+                        _currentYWhole     != ProblemYWholes[_currentQuestion]     ||
+                        _currentXNumerator != ProblemXNumerators[_currentQuestion] ||
+                        _currentYNumerator != ProblemYNumerators[_currentQuestion])) {
+
+                if ((_currentXWhole != ProblemXWholes[_currentQuestion] || _currentXNumerator != ProblemXNumerators[_currentQuestion]) &&
+                    (_currentYWhole != ProblemYWholes[_currentQuestion] || _currentYNumerator != ProblemYNumerators[_currentQuestion])) {
+                    _errorText = CurrentStep.NumeratorKey;
+                } else if (_currentXWhole != ProblemXWholes[_currentQuestion] || _currentXNumerator != ProblemXNumerators[_currentQuestion]) {
+                    _errorText = $"{CurrentStep.NumeratorKey}_x";
+                } else {
+                    _errorText = $"{CurrentStep.NumeratorKey}_y";
+                }
+            } else if (!IsProblemCorrect) {
+                _errorText = CurrentStep.LanguageKey;
+            } else {
+                _errorText = HINT_SUBMIT;
+            }
+        }
+
+        public IEnumerator ShowHint() {
+            _showHint = true;
+            EvaluateProblemProgress(true);
+            ShowInstruction(true);
+            SkipButton.gameObject.SetActive(false);
+            
+            yield return HintDelay;
+            
+            _showHint = false;
+            _isError = false;
+            ShowProblem(true);
+            SkipButton.gameObject.SetActive(true);
         }
 
         public static IEnumerator DelaySceneChange() {

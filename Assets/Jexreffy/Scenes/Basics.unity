@@ -2675,10 +2675,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1459326303}
-  - {fileID: 1508433302}
-  - {fileID: 1682578157}
   - {fileID: 1496870590}
   - {fileID: 1171574831}
+  - {fileID: 1508433302}
+  - {fileID: 1682578157}
   - {fileID: 1791006811}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -2706,8 +2706,11 @@ MonoBehaviour:
   FaderAnimator: {fileID: 1791006814}
   InstructionContainer: {fileID: 1976012045}
   Instructions: {fileID: 206303034}
+  SkipSprite: {fileID: 544485541}
   SkipButton: {fileID: 1335604678}
   SubmitButton: {fileID: 1717947020}
+  AdvanceSprite: {fileID: 21300094, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
+  HintSprite: {fileID: 21300082, guid: 1eaee135ce037439d925cee5e41ce026, type: 3}
   ScoreTransform: {fileID: 1171574831}
   ScoreLabel: {fileID: 1633952635}
   ScoreValue: {fileID: 2114057154}
@@ -2863,7 +2866,7 @@ MonoBehaviour:
     NumeratorKey: basics_error_highlight
     ReverseKey: basics_error_reverse
     TileKey: 
-    LanguageKey: basics_error_highlight
+    LanguageKey: basics_error_numerator
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
@@ -2885,7 +2888,7 @@ MonoBehaviour:
     NumeratorKey: basics_error_highlight
     ReverseKey: basics_error_reverse
     TileKey: 
-    LanguageKey: basics_error_highlight
+    LanguageKey: basics_error_numerator
     HasAnimation: 0
     AnimationKey: 
   - IsProblem: 0
@@ -5966,7 +5969,7 @@ RectTransform:
   - {fileID: 1633952637}
   - {fileID: 2114057156}
   m_Father: {fileID: 566811140}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -8471,7 +8474,7 @@ RectTransform:
   - {fileID: 1988741104}
   - {fileID: 1717947019}
   m_Father: {fileID: 566811140}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9351,7 +9354,7 @@ RectTransform:
   - {fileID: 2085106042}
   - {fileID: 75888786}
   m_Father: {fileID: 566811140}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -9806,7 +9809,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1797641784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
   m_Name: 
@@ -12290,7 +12293,7 @@ PrefabInstance:
     - target: {fileID: 5767459414012786740, guid: 96408434ace124d7c9062ccc92685d17,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5767459414012786740, guid: 96408434ace124d7c9062ccc92685d17,
         type: 3}
