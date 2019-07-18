@@ -2,6 +2,8 @@
   "_meta": {
     "maxChars": {
       "score": 11,
+      "question": 20,
+      "answer": 20,
       "basics_denominator_01": 162,
       "basics_denominator_02": 162,
       "basics_denominator_03": 162,
@@ -62,10 +64,12 @@
   },
   "en": {
     "score": "Score:",
+    "question": "Question:",
+    "answer": "Your Answer:",
     "basics_denominator_01": "Here at Fraction Farms, we showcase how to divide up land in order to produce crops more efficiently.",
     "basics_denominator_02": "We do this by taking Unit Tiles and breaking their sides into fractional lengths.",
     "basics_denominator_03": "There is a back and forward button to change the number of parts each side is divided up by, the first fraction goes horizontal, the second vertical.",
-    "basics_denominator_04": "Let's use them to divide up this piece of farm land. Click the submit button to check your results.",
+    "basics_denominator_04": "Let's use them to divide up this piece of farm land. Click the hint button if you need help. Click the submit button to check your results.",
     "basics_denominator_05": "Excellent! Let's try a different combination.",
     "basics_numerator_01": "Good job! From here, we need to identify the portion of land we want to use now that it is divided.",
     "basics_numerator_02": "We use the side buttons to highlight a portion of tiles.",

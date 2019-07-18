@@ -49,7 +49,8 @@ namespace Jexreffy.FractionFarms {
             } else {
                 _currentXDenominator = Tiles[tileIndex].CurrentXDenominator;
             }
-            AnswerDenominator.text = _currentDenominator.ToString();
+            
+            UpdateAnswerText();
         }
 
         public override void UpdateNumerator() {
@@ -57,7 +58,8 @@ namespace Jexreffy.FractionFarms {
             for (var i = 0; i < Tiles.Count; i++) {
                 _currentNumerator += Tiles[i].GetSelected(1);
             }
-            AnswerNumerator.text = _currentNumerator.ToString();
+            
+            UpdateAnswerText();
         }
 
         public override void UpdateHighlighting(int tileIndex, bool yAxis) {
@@ -67,11 +69,9 @@ namespace Jexreffy.FractionFarms {
                            _currentXNumerator == Tiles[tileIndex].CurrentXNumerator))) return;
             
             if (yAxis) {
-                _currentYWhole     = tileIndex / XSize;
-                _currentYNumerator = Tiles[tileIndex].CurrentYNumerator;
+                _currentYNumerator = tileIndex / XSize * _currentYDenominator + Tiles[tileIndex].CurrentYNumerator;
             } else {
-                _currentXWhole     = tileIndex % XSize;
-                _currentXNumerator = Tiles[tileIndex].CurrentXNumerator;
+                _currentXNumerator = tileIndex % XSize * _currentXDenominator + Tiles[tileIndex].CurrentXNumerator;
             }
 
             for (var i = 0; i < Tiles.Count; i++) {
@@ -83,6 +83,8 @@ namespace Jexreffy.FractionFarms {
                     Tiles[i].OnHighlightX(i % XSize < tileIndex % XSize ? _currentXDenominator : 0);
                 }
             }
+            
+            UpdateAnswerText();
         }
 
         public override void OnAnswerSubmitted() {

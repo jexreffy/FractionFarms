@@ -15,18 +15,16 @@ namespace Jexreffy.FractionFarms {
         public Animator FaderAnimator;
         public GameObject InstructionContainer;
         public TextMeshProUGUI Instructions;
-        public Image SkipSprite;
         public Button SkipButton;
         public Button SubmitButton;
-
-        public Sprite AdvanceSprite;
-        public Sprite HintSprite;
+        public Button HintButton;
 
         public RectTransform ScoreTransform;
         public TextMeshProUGUI ScoreLabel;
         public TextMeshProUGUI ScoreValue;
 
         public GameObject ProblemContainer;
+        public TextMeshProUGUI ProblemLabel;
         public TextMeshProUGUI ProblemXWhole;
         public TextMeshProUGUI ProblemXNumerator;
         public TextMeshProUGUI ProblemXDenominator;
@@ -34,6 +32,14 @@ namespace Jexreffy.FractionFarms {
         public TextMeshProUGUI ProblemYNumerator;
         public TextMeshProUGUI ProblemYDenominator;
 
+        public GameObject AnswerContainer;
+        public TextMeshProUGUI AnswerLabel;
+        public TextMeshProUGUI AnswerXWhole;
+        public TextMeshProUGUI AnswerXNumerator;
+        public TextMeshProUGUI AnswerXDenominator;
+        public TextMeshProUGUI AnswerYWhole;
+        public TextMeshProUGUI AnswerYNumerator;
+        public TextMeshProUGUI AnswerYDenominator;
         public TextMeshProUGUI AnswerWhole;
         public TextMeshProUGUI AnswerNumerator;
         public TextMeshProUGUI AnswerDivider;
@@ -84,10 +90,15 @@ namespace Jexreffy.FractionFarms {
         private const string HINT_SUBMIT = "hint_submit";
 
         private const string SCORE = "score";
+        private const string QUESTION = "question";
+        private const string ANSWER = "answer";
 
         private void Start() {
             ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
             ScoreValue.text = PlatformController.Instance.Score.ToString();
+
+            ProblemLabel.text = PlatformController.Instance.GetText(QUESTION);
+            AnswerLabel.text = PlatformController.Instance.GetText(ANSWER);
 
             AdvanceStep();
             FaderAnimator.SetTrigger(FadeIn);
@@ -112,8 +123,10 @@ namespace Jexreffy.FractionFarms {
         private void ShowProblem(bool hint = false) {
             InstructionContainer.SetActive(false);
             ProblemContainer.SetActive(true);
-            SkipSprite.sprite = HintSprite;
+            AnswerContainer.SetActive(true);
+            SkipButton.gameObject.SetActive(false);
             SubmitButton.gameObject.SetActive(true);
+            HintButton.gameObject.SetActive(true);
             
             if (AnswerWhole != null) AnswerWhole.gameObject.SetActive(CurrentStep.EnableTiles);
             AnswerNumerator.gameObject.SetActive(CurrentStep.EnableTiles);
@@ -121,30 +134,18 @@ namespace Jexreffy.FractionFarms {
             AnswerDenominator.gameObject.SetActive(CurrentStep.EnableTiles);
 
             if (!hint) {
-                if (AnswerWhole != null) AnswerWhole.text = "0";
-                AnswerNumerator.text = "0";
-                AnswerDenominator.text = "1";
+                UpdateAnswerText();
 
                 if (!_isError) _currentScore = CurrentStep.PointsAvailable;
 
                 OnQuestionStep();
             }
 
-            if (ProblemXWhole != null && ProblemXWholes[_currentQuestion] > 0) {
-                ProblemXWhole.gameObject.SetActive(true);
-                ProblemXWhole.text = ProblemXWholes[_currentQuestion].ToString();
-            } else if (ProblemXWhole != null) {
-                ProblemXWhole.gameObject.SetActive(false);
-            }
+            if (ProblemXWhole != null) ProblemXWhole.text = ProblemXWholes[_currentQuestion].ToString();
             ProblemXNumerator.text = ProblemXNumerators[_currentQuestion].ToString();
             ProblemXDenominator.text = ProblemXDenominators[_currentQuestion].ToString();
 
-            if (ProblemYWhole != null && ProblemYWholes[_currentQuestion] > 0) {
-                ProblemYWhole.gameObject.SetActive(true);
-                ProblemYWhole.text = ProblemYWholes[_currentQuestion].ToString();
-            } else if (ProblemYWhole != null) {
-                ProblemYWhole.gameObject.SetActive(false);
-            }
+            if (ProblemYWhole != null) ProblemYWhole.text = ProblemYWholes[_currentQuestion].ToString();
             ProblemYNumerator.text = ProblemYNumerators[_currentQuestion].ToString();
             ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
 
@@ -154,8 +155,10 @@ namespace Jexreffy.FractionFarms {
         private void ShowInstruction(bool hint = false) {
             InstructionContainer.SetActive(true);
             ProblemContainer.SetActive(false);
-            SkipSprite.sprite = AdvanceSprite;
+            AnswerContainer.SetActive(false);
+            SkipButton.gameObject.SetActive(true);
             SubmitButton.gameObject.SetActive(false);
+            HintButton.gameObject.SetActive(false);
 
             if (AnswerWhole != null) AnswerWhole.gameObject.SetActive(false);
             AnswerNumerator.gameObject.SetActive(false);
@@ -167,6 +170,20 @@ namespace Jexreffy.FractionFarms {
             Instructions.text = PlatformController.Instance.GetTextAndSpeak(_isError ? _errorText : CurrentStep.LanguageKey);
             
             if (SequenceAnimator != null) SequenceAnimator.SetTrigger(CurrentStep.HasAnimation ? CurrentStep.AnimationKey : DEFAULT_ANIMATION);
+        }
+
+        protected void UpdateAnswerText() {
+            if (AnswerXWhole != null) AnswerXWhole.text = _currentXWhole.ToString();
+            AnswerXNumerator.text = _currentXNumerator.ToString();
+            AnswerXDenominator.text = _currentXDenominator.ToString();
+            
+            if (AnswerYWhole != null) AnswerYWhole.text = _currentYWhole.ToString();
+            AnswerYNumerator.text   = _currentYNumerator.ToString();
+            AnswerYDenominator.text = _currentYDenominator.ToString();
+            
+            if (AnswerWhole != null) AnswerWhole.text = _currentWhole.ToString();
+            AnswerNumerator.text   = _currentNumerator.ToString();
+            AnswerDenominator.text = _currentDenominator.ToString();
         }
 
         public void OnSubmitAnswer() {
@@ -262,14 +279,14 @@ namespace Jexreffy.FractionFarms {
             _showHint = true;
             EvaluateProblemProgress(true);
             ShowInstruction(true);
-            SkipButton.gameObject.SetActive(false);
+            HintButton.gameObject.SetActive(false);
             
             yield return HintDelay;
             
             _showHint = false;
             _isError = false;
             ShowProblem(true);
-            SkipButton.gameObject.SetActive(true);
+            HintButton.gameObject.SetActive(true);
         }
 
         public static IEnumerator DelaySceneChange() {
