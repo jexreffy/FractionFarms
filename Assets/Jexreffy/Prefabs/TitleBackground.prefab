@@ -225,7 +225,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: 21300028, guid: 9f31473eb9f2d4ca298b752c6df3a445, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -383,7 +383,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: 21300028, guid: 9f31473eb9f2d4ca298b752c6df3a445, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -699,7 +699,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 10
+  m_SortingOrder: 11
   m_Sprite: {fileID: 21300028, guid: 9f31473eb9f2d4ca298b752c6df3a445, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -800,7 +800,7 @@ PrefabInstance:
     - target: {fileID: 4513878538789926153, guid: 7e9cfdd4d53e747b788e5738d51bba71,
         type: 3}
       propertyPath: m_Name
-      value: Background
+      value: TitleBackground
       objectReference: {fileID: 0}
     - target: {fileID: 4513878538789926167, guid: 7e9cfdd4d53e747b788e5738d51bba71,
         type: 3}
