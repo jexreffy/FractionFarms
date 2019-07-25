@@ -29,7 +29,8 @@ namespace Jexreffy.FractionFarms {
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
             if (_currentDenominator == Tile.CurrentDenominator) return;
 
-            _currentTile = 0;
+            _currentTile      = 0;
+            _currentNumerator = 0;
             _currentDenominator = Tile.CurrentDenominator;
             if (yAxis) {
                 _currentYDenominator = Tile.CurrentYDenominator;
@@ -44,12 +45,13 @@ namespace Jexreffy.FractionFarms {
             var selectedCount = Tile.GetSelected(1);
             if (_currentNumerator == selectedCount) return;
             
-            _currentNumerator    = selectedCount;
+            _currentNumerator = selectedCount;
             
             UpdateAnswerText();
         }
 
         public override void UpdateHighlighting(int tileIndex, bool yAxis) {
+            _currentNumerator = 0;
             if (yAxis) {
                 _currentYNumerator = Tile.CurrentYNumerator;
             } else {
@@ -60,7 +62,11 @@ namespace Jexreffy.FractionFarms {
         }
 
         public override void OnAnswerSubmitted() {
-            Tile.ResetTile();
+            Tile.ResetTile(false,
+                           !_preserveXNumerator,
+                           !_preserveXDenominator,
+                           !_preserveYNumerator,
+                           !_preserveYDenominator);
         }
     }
 }

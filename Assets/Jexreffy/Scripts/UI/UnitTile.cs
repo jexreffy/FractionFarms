@@ -13,8 +13,6 @@ namespace Jexreffy.FractionFarms {
         public bool PopulateHighlightX;
         public bool PopulateHighlightY;
 
-        public Button Enabler;
-
         public TextMeshProUGUI XNumerator;
         public TextMeshProUGUI XDenominator;
         public Button XBackButton;
@@ -97,7 +95,35 @@ namespace Jexreffy.FractionFarms {
                 _buttonTransformPool[i].SetParent(parent, false);
                 _buttonObjectPool[i].name = i.ToString();
                 _buttonObjectPool[i].SetActive(false);
-                _buttonPool[i].onClick.AddListener(OnTileClick);
+                var eventTrigger = _buttonObjectPool[i].AddComponent<EventTrigger>();
+                var eventClick = new EventTrigger.Entry {
+                                                            eventID  = EventTriggerType.PointerEnter,
+                                                            callback = new EventTrigger.TriggerEvent()
+                                                        };
+                var index = i;
+                eventClick.callback.AddListener((eventData) => {
+                                                    if (!Parent.IsPointerDown) return;
+                                                    OnTileClick(index);
+                                                });
+                eventTrigger.triggers.Add(eventClick);
+                eventClick = new EventTrigger.Entry {
+                                                        eventID  = EventTriggerType.PointerDown,
+                                                        callback = new EventTrigger.TriggerEvent()
+                                                    };
+                eventClick.callback.AddListener((eventData) => {
+                                                    if (!Parent.IsProblem) return;
+                                                    
+                                                    Parent.IsPointerDown = true;
+                                                    if (!IsTileEnabled) EnableTile();
+                                                    OnTileClick(index);
+                                                });
+                eventTrigger.triggers.Add(eventClick);
+                eventClick = new EventTrigger.Entry {
+                                                        eventID  = EventTriggerType.PointerUp,
+                                                        callback = new EventTrigger.TriggerEvent()
+                                                    };
+                eventClick.callback.AddListener((eventData) => { Parent.IsPointerDown = false; });
+                eventTrigger.triggers.Add(eventClick);
                 _selected.Add(0);
             }
 
@@ -150,7 +176,6 @@ namespace Jexreffy.FractionFarms {
         }
 
         private void OnTileEnabled(bool overrideControls = false) {
-            Enabler.enabled = !IsTileEnabled;
             var tilesEnabled = IsTileEnabled && Parent.EnableTiles;
 
             if (!overrideControls) {
@@ -168,28 +193,13 @@ namespace Jexreffy.FractionFarms {
                 XHighlightContainer.SetActive(tilesEnabled);
                 YHighlightContainer.SetActive(tilesEnabled);
             }
-
-            for (var i = 0; i < _buttonPool.Count; i++) {
-                _buttonPool[i].image.raycastTarget = tilesEnabled;
-                _buttonPool[i].interactable = tilesEnabled;
-            }
         }
 
-        public void ResetTile(bool overrideControls = false, bool resetX = true, bool resetY = true) {
-            if (resetX) {
-                CurrentXDenominator = 1;
-                CurrentXNumerator = 0;
-            }
-
-            if (resetY) {
-                CurrentYDenominator = 1;
-                CurrentYNumerator = 0;
-            }
-
-            _selected[0] = 0;
-            _buttonPool[0].image.color = DefaultColors[0];
-            _buttonPool[0].colors = ButtonColors[0];
-            _highlightPool[0].color = DefaultColors[0];
+        public void ResetTile(bool overrideControls = false, bool resetXNum = true, bool resetXDen = true, bool resetYNum = true, bool resetYDen = true) {
+            if (resetXNum) CurrentXNumerator   = 0;
+            if (resetXDen) CurrentXDenominator = 1;
+            if (resetYNum) CurrentYNumerator   = 0;
+            if (resetYDen) CurrentYDenominator = 1;
 
             IsTileEnabled = false;
             OnTileEnabled(overrideControls);
@@ -208,34 +218,38 @@ namespace Jexreffy.FractionFarms {
             YForwardButton.interactable = CurrentYDenominator < MaxDenominator;
 
             for (var i = 0; i < _buttonObjectPool.Count; i++) {
+                _selected[i]               = 0;
+                _buttonPool[i].image.color = DefaultColors[0];
+                _buttonPool[i].colors      = ButtonColors[0];
+                _highlightPool[i].color    = DefaultColors[0];
+                
                 var isActive = i % MaxDenominator < CurrentXDenominator && i / MaxDenominator < CurrentYDenominator;
                 var isXHighlighted = i % MaxDenominator < CurrentXNumerator;
                 var isYHighlighted = i / MaxDenominator < CurrentYNumerator;
                 _buttonObjectPool[i].SetActive(isActive);
                 _highlightObjectPool[i].SetActive(isActive);
-                if (isActive) {
-                    _buttonTransformPool[i].anchorMin = new Vector2(i % MaxDenominator / (float)CurrentXDenominator, i / MaxDenominator / (float)CurrentYDenominator);
-                    _buttonTransformPool[i].anchorMax = new Vector2(_buttonTransformPool[i].anchorMin.x + (1 % MaxDenominator / (float)CurrentXDenominator), (i + MaxDenominator) / MaxDenominator / (float)CurrentYDenominator);
-                    _buttonTransformPool[i].offsetMin = _tileSpacer;
-                    _buttonTransformPool[i].offsetMax = -_tileSpacer;
+                if (!isActive) continue;
+                
+                _buttonTransformPool[i].anchorMin = new Vector2(i % MaxDenominator / (float)CurrentXDenominator, 
+                                                                i / MaxDenominator / (float)CurrentYDenominator);
+                _buttonTransformPool[i].anchorMax = new Vector2(_buttonTransformPool[i].anchorMin.x + (1 % MaxDenominator / (float)CurrentXDenominator),
+                                                                (i + MaxDenominator) / MaxDenominator / (float)CurrentYDenominator);
+                _buttonTransformPool[i].offsetMin = _tileSpacer;
+                _buttonTransformPool[i].offsetMax = -_tileSpacer;
 
-                    _highlightTransformPool[i].anchorMin = new Vector2(i % MaxDenominator / (float)CurrentXDenominator, i / MaxDenominator / (float)CurrentYDenominator);
-                    _highlightTransformPool[i].anchorMax = new Vector2(_buttonTransformPool[i].anchorMin.x + (1 % MaxDenominator / (float)CurrentXDenominator), (i + MaxDenominator) / MaxDenominator / (float)CurrentYDenominator);
-                    _highlightTransformPool[i].offsetMin = _highlightSpacer;
-                    _highlightTransformPool[i].offsetMax = _highlightSpacer;
-                    if (isXHighlighted && isYHighlighted) {
-                        _highlightPool[i].color = XYHighlightColor;
-                    } else if (isXHighlighted) {
-                        _highlightPool[i].color = XHighlightColor;
-                    } else if (isYHighlighted) {
-                        _highlightPool[i].color = YHighlightColor;
-                    } else {
-                        _highlightPool[i].color = DefaultColors[0];
-                    }
+                _highlightTransformPool[i].anchorMin = new Vector2(i % MaxDenominator / (float)CurrentXDenominator,
+                                                                   i / MaxDenominator / (float)CurrentYDenominator);
+                _highlightTransformPool[i].anchorMax = new Vector2(_buttonTransformPool[i].anchorMin.x + (1 % MaxDenominator / (float)CurrentXDenominator),
+                                                                   (i + MaxDenominator) / MaxDenominator / (float)CurrentYDenominator);
+                _highlightTransformPool[i].offsetMin = _highlightSpacer;
+                _highlightTransformPool[i].offsetMax = _highlightSpacer;
+                if (isXHighlighted && isYHighlighted) {
+                    _highlightPool[i].color = XYHighlightColor;
+                } else if (isXHighlighted) {
+                    _highlightPool[i].color = XHighlightColor;
+                } else if (isYHighlighted) {
+                    _highlightPool[i].color = YHighlightColor;
                 } else {
-                    _selected[i] = 0;
-                    _buttonPool[i].image.color = DefaultColors[0];
-                    _buttonPool[i].colors = ButtonColors[0];
                     _highlightPool[i].color = DefaultColors[0];
                 }
             }
@@ -320,13 +334,15 @@ namespace Jexreffy.FractionFarms {
             Parent.UpdateDenominator(Index, true);
         }
 
-        public void OnTileClick() {
-            var index = int.Parse(EventSystem.current.currentSelectedGameObject.name);
+        public void OnTileClick(int index) {
+            if (index % MaxDenominator >= CurrentXNumerator || index / MaxDenominator >= CurrentYNumerator) return;
 
-            if (++_selected[index] >= DefaultColors.Count) _selected[index] = 0;
+            if (_selected[index] > 0) return;
+                
+            _selected[index] = 1;
 
             _buttonPool[index].image.color = DefaultColors[_selected[index]];
-            _buttonPool[index].colors = ButtonColors[_selected[index]];
+            _buttonPool[index].colors      = ButtonColors[_selected[index]];
 
             Parent.UpdateNumerator();
         }

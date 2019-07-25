@@ -24,6 +24,8 @@ namespace Jexreffy.FractionFarms {
         public TextMeshProUGUI ScoreValue;
 
         public GameObject ProblemContainer;
+        public GameObject ProblemFormulaContainer;
+        public GameObject ProblemWordContainer;
         public TextMeshProUGUI ProblemLabel;
         public TextMeshProUGUI ProblemXWhole;
         public TextMeshProUGUI ProblemXNumerator;
@@ -31,6 +33,7 @@ namespace Jexreffy.FractionFarms {
         public TextMeshProUGUI ProblemYWhole;
         public TextMeshProUGUI ProblemYNumerator;
         public TextMeshProUGUI ProblemYDenominator;
+        public TextMeshProUGUI ProblemText;
 
         public GameObject AnswerContainer;
         public TextMeshProUGUI AnswerLabel;
@@ -75,6 +78,11 @@ namespace Jexreffy.FractionFarms {
         protected int _currentNumerator;
         protected int _currentDenominator = 1;
 
+        protected bool _preserveXNumerator;
+        protected bool _preserveYNumerator;
+        protected bool _preserveXDenominator;
+        protected bool _preserveYDenominator;
+
         protected bool _isError;
         protected string _errorText;
 
@@ -92,6 +100,7 @@ namespace Jexreffy.FractionFarms {
         private const string SCORE = "score";
         private const string QUESTION = "question";
         private const string ANSWER = "answer";
+        
 
         private void Start() {
             ScoreLabel.text = PlatformController.Instance.GetText(SCORE);
@@ -104,7 +113,9 @@ namespace Jexreffy.FractionFarms {
             FaderAnimator.SetTrigger(FadeIn);
         }
 
-        protected SequenceStep CurrentStep { get { return SequenceSteps[_currentStep]; } }
+        public bool IsPointerDown { get; set; }
+        protected SequenceStep CurrentStep => SequenceSteps[_currentStep];
+        public bool IsProblem => CurrentStep.IsProblem;
         public bool EnableTiles => CurrentStep.EnableTiles;
 
         private void AdvanceStep() {
@@ -141,13 +152,26 @@ namespace Jexreffy.FractionFarms {
                 OnQuestionStep();
             }
 
-            if (ProblemXWhole != null) ProblemXWhole.text = ProblemXWholes[_currentQuestion].ToString();
-            ProblemXNumerator.text = ProblemXNumerators[_currentQuestion].ToString();
-            ProblemXDenominator.text = ProblemXDenominators[_currentQuestion].ToString();
+            if (string.IsNullOrWhiteSpace(CurrentStep.LanguageKey)) {
+                ProblemFormulaContainer.SetActive(true);
+                ProblemWordContainer.SetActive(false);
+                if (ProblemXWhole != null) ProblemXWhole.text = ProblemXWholes[_currentQuestion].ToString();
+                ProblemXNumerator.text   = ProblemXNumerators[_currentQuestion].ToString();
+                ProblemXDenominator.text = ProblemXDenominators[_currentQuestion].ToString();
 
-            if (ProblemYWhole != null) ProblemYWhole.text = ProblemYWholes[_currentQuestion].ToString();
-            ProblemYNumerator.text = ProblemYNumerators[_currentQuestion].ToString();
-            ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
+                if (ProblemYWhole != null) ProblemYWhole.text = ProblemYWholes[_currentQuestion].ToString();
+                ProblemYNumerator.text   = ProblemYNumerators[_currentQuestion].ToString();
+                ProblemYDenominator.text = ProblemYDenominators[_currentQuestion].ToString();
+            } else {
+                ProblemFormulaContainer.SetActive(false);
+                ProblemWordContainer.SetActive(true);
+
+                if (!(hint || _isError)) {
+                    ProblemText.text = PlatformController.Instance.GetTextAndSpeak(CurrentStep.LanguageKey);
+                } else {
+                    ProblemText.text = PlatformController.Instance.GetText(CurrentStep.LanguageKey);
+                }
+            }
 
             if (SequenceAnimator != null) SequenceAnimator.SetTrigger(Default);
         }
@@ -192,6 +216,11 @@ namespace Jexreffy.FractionFarms {
                 ScoreValue.text = PlatformController.Instance.Score.ToString();
                 _currentQuestion++;
                 AdvanceStep();
+                
+                _preserveXNumerator   = false;
+                _preserveYNumerator   = false;
+                _preserveXDenominator = false;
+                _preserveYDenominator = false;
             } else {
                 _currentScore = Mathf.Max(_currentScore - CurrentStep.IncorrectPenalty, 0);
 
@@ -199,19 +228,34 @@ namespace Jexreffy.FractionFarms {
                 ShowInstruction();
             }
             
-            _currentTile = -1;
-                
-            _currentWhole       = 0;
-            _currentNumerator   = 0;
-            _currentDenominator = 1;
+            _currentWhole     = 0;
+            _currentNumerator = 0;
 
-            _currentXWhole       = 0;
-            _currentXNumerator   = 0;
-            _currentXDenominator = 1;
+            if (!_preserveXNumerator) {
+                _currentXWhole     = 0;
+                _currentXNumerator = 0;
+            }
+            
+            if (!_preserveYNumerator) {
+                _currentYWhole     = 0;
+                _currentYNumerator = 0;
+            }
+            
+            if (!(_preserveXDenominator && _preserveYDenominator)) {
+                _currentTile = -1;
 
-            _currentYWhole       = 0;
-            _currentYNumerator   = 0;
-            _currentYDenominator = 1;
+                if (!(_preserveXDenominator || _preserveYDenominator)) {
+                    _currentDenominator  = 1;
+                    _currentXDenominator = 1;
+                    _currentYDenominator = 1;
+                } else if (!_preserveXDenominator) {
+                    _currentDenominator  = _currentYDenominator;
+                    _currentXDenominator = 1;
+                } else {
+                    _currentDenominator  = _currentXDenominator;
+                    _currentYDenominator = 1;
+                }
+            }
 
             OnAnswerSubmitted();
         }
@@ -239,37 +283,57 @@ namespace Jexreffy.FractionFarms {
 
         private void EvaluateProblemProgress(bool hint = false) {
             _isError = true;
+
+            if (!hint) {
+                _preserveXNumerator = false;
+                _preserveYNumerator = false;
+                _preserveXDenominator = false;
+                _preserveYDenominator = false;
+            }
             
             if (_currentDenominator != AnswerDenominators[_currentQuestion]) {
                 if (_currentXDenominator != ProblemXDenominators[_currentQuestion] &&
                     _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
                     _errorText = CurrentStep.DenominatorKey;
                 } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion]) {
+                    if (!hint) _preserveYDenominator = true;
                     _errorText = $"{CurrentStep.DenominatorKey}_x";
                 } else {
+                    if (!hint) _preserveXDenominator = true;
                     _errorText = $"{CurrentStep.DenominatorKey}_y";
                 }
-            } else if (_currentTile != AnswerTiles[_currentQuestion]) {
-                _errorText = CurrentStep.TileKey;
             } else if (_currentXDenominator != ProblemXDenominators[_currentQuestion] ||
                        _currentYDenominator != ProblemYDenominators[_currentQuestion]) {
                 _errorText = CurrentStep.ReverseKey;
+            } else if (_currentTile != AnswerTiles[_currentQuestion]) {
+                _errorText = CurrentStep.TileKey;
             } else if (CurrentStep.EnableTiles &&
                        (_currentXWhole     != ProblemXWholes[_currentQuestion]     ||
                         _currentYWhole     != ProblemYWholes[_currentQuestion]     ||
                         _currentXNumerator != ProblemXNumerators[_currentQuestion] ||
                         _currentYNumerator != ProblemYNumerators[_currentQuestion])) {
-
+                if (!hint) {
+                    _preserveXDenominator = true;
+                    _preserveYDenominator = true;
+                }
                 if ((_currentXWhole != ProblemXWholes[_currentQuestion] || _currentXNumerator != ProblemXNumerators[_currentQuestion]) &&
                     (_currentYWhole != ProblemYWholes[_currentQuestion] || _currentYNumerator != ProblemYNumerators[_currentQuestion])) {
                     _errorText = CurrentStep.NumeratorKey;
                 } else if (_currentXWhole != ProblemXWholes[_currentQuestion] || _currentXNumerator != ProblemXNumerators[_currentQuestion]) {
+                    if (!hint) _preserveYNumerator = true;
                     _errorText = $"{CurrentStep.NumeratorKey}_x";
                 } else {
+                    if (!hint) _preserveXNumerator = true;
                     _errorText = $"{CurrentStep.NumeratorKey}_y";
                 }
             } else if (!IsProblemCorrect) {
-                _errorText = CurrentStep.LanguageKey;
+                if (!hint) {
+                    _preserveXNumerator = true;
+                    _preserveYNumerator = true;
+                    _preserveXDenominator = true;
+                    _preserveYDenominator = true;
+                }
+                _errorText = CurrentStep.ErrorKey;
             } else {
                 _errorText = HINT_SUBMIT;
             }

@@ -11,6 +11,7 @@ namespace Jexreffy.FractionFarms {
         public string NumeratorKey;
         public string ReverseKey;
         public string TileKey;
+        public string ErrorKey;
         public string LanguageKey;
         public bool HasAnimation;
         public string AnimationKey;

@@ -37,13 +37,12 @@ namespace Jexreffy.FractionFarms {
                 }
                 
                 _currentDenominator = _currentXDenominator * _currentYDenominator;
-                UpdateNumerator();
 
                 for (var i = 0; i < Tiles.Count; i++) {
                     if (i == tileIndex) continue;
 
                     if ((yAxis && i / XSize != tileIndex / XSize) || (!yAxis && i % XSize != tileIndex % XSize)) {
-                        Tiles[i].ResetTile(true, !yAxis, yAxis);
+                        Tiles[i].ResetTile(true, !yAxis, !yAxis, yAxis, yAxis);
                     } else if ((yAxis && i / XSize == tileIndex / XSize && Tiles[i].CurrentXDenominator > 1  && Tiles[i].CurrentXDenominator != _currentXDenominator) ||
                                (!yAxis && i % XSize == tileIndex % XSize && Tiles[i].CurrentYDenominator > 1 && Tiles[i].CurrentYDenominator != _currentYDenominator)) {
                     
@@ -52,8 +51,7 @@ namespace Jexreffy.FractionFarms {
                         } else {
                             _currentYDenominator = 1;
                         }
-                        Tiles[i].ResetTile(true, yAxis, !yAxis);
-                        UpdateNumerator();
+                        Tiles[i].ResetTile(true, yAxis, yAxis, !yAxis, !yAxis);
                     }
 
                     
@@ -67,6 +65,10 @@ namespace Jexreffy.FractionFarms {
                         Tiles[i].OnHighlightX(0);
                     }
                 }
+                
+                _currentWhole     = 0;
+                _currentNumerator = 0;
+                UpdateNumerator();
             }
 
             _currentTile = -1;
@@ -75,7 +77,6 @@ namespace Jexreffy.FractionFarms {
                 
                 _currentTile = i;
                 if (!CurrentStep.EnableTiles) {
-                    Debug.Log($"Current Tile {_currentTile}");
                     _currentXWhole = _currentTile % XSize;
                     _currentYWhole = _currentTile / XSize;
                 }
@@ -96,7 +97,9 @@ namespace Jexreffy.FractionFarms {
 
         public override void UpdateHighlighting(int tileIndex, bool yAxis) {
             if (!Tiles[tileIndex].IsTileEnabled) return;
-            
+
+            _currentWhole     = 0;
+            _currentNumerator = 0;
             if (yAxis) {
                 _currentYWhole     = tileIndex / XSize;
                 _currentYNumerator = Tiles[tileIndex].CurrentYNumerator;
@@ -120,7 +123,11 @@ namespace Jexreffy.FractionFarms {
 
         public override void OnAnswerSubmitted() {
             for (var i = 0; i < Tiles.Count; i++) {
-                Tiles[i].ResetTile();
+                Tiles[i].ResetTile(false,
+                                   !_preserveXNumerator,
+                                   !_preserveXDenominator,
+                                   !_preserveYNumerator,
+                                   !_preserveYDenominator);
             }
         }
     }

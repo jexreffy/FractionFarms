@@ -42,7 +42,8 @@ namespace Jexreffy.FractionFarms {
         public override void UpdateDenominator(int tileIndex, bool yAxis) {
             if (_currentDenominator == Tiles[tileIndex].CurrentDenominator) return;
 
-            _currentTile = 0;
+            _currentTile      = 0;
+            _currentNumerator = 0;
             _currentDenominator = Tiles[tileIndex].CurrentDenominator;
             if (yAxis) {
                 _currentYDenominator = Tiles[tileIndex].CurrentYDenominator;
@@ -68,6 +69,7 @@ namespace Jexreffy.FractionFarms {
                 (yAxis || (_currentXWhole     == tileIndex % XSize &&
                            _currentXNumerator == Tiles[tileIndex].CurrentXNumerator))) return;
             
+            _currentNumerator = 0;
             if (yAxis) {
                 _currentYNumerator = tileIndex / XSize * _currentYDenominator + Tiles[tileIndex].CurrentYNumerator;
             } else {
@@ -89,7 +91,11 @@ namespace Jexreffy.FractionFarms {
 
         public override void OnAnswerSubmitted() {
             for (var i = 0; i < Tiles.Count; i++) {
-                Tiles[i].ResetTile();
+                Tiles[i].ResetTile(false,
+                                   !_preserveXNumerator,
+                                   !_preserveXDenominator,
+                                   !_preserveYNumerator,
+                                   !_preserveYDenominator);
             }
         }
     }
