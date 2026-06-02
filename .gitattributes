@@ -1,0 +1,5 @@
+# Tell GitHub Linguist to ignore third-party shader files (TextMesh Pro, Unity built-ins)
+# so the repository correctly shows C# as the primary language.
+*.shader linguist-vendored=true
+*.cg     linguist-vendored=true
+*.hlsl   linguist-vendored=true
